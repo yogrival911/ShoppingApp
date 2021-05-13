@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">MallFirebase</string>
+    <string name="facebook_application_id" translatable="false">1:987611288022:android:4dadcd13bd4b23d5de9477</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb1:987611288022:android:4dadcd13bd4b23d5de9477</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+</resources>
+
