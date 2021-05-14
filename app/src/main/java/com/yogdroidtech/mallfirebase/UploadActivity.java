@@ -111,17 +111,17 @@ public class UploadActivity extends AppCompatActivity {
                                     Banner banner = document.toObject(Banner.class);
                                     bannerList.add(banner);
                                 }
+                                Glide.with(UploadActivity.this).load(bannerList.get(0).getImgUrl()).into(imageView);
 
 //                                storageReference = storage.getReferenceFromUrl(productsList.get(0).getImgUrl());
-                                StorageReference sr = storageReference.child("images/"+bannerList.get(0).getImgUrl());
-
-                                sr.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Uri> task) {
-                                        Log.i("to", task.toString());
-                                        Glide.with(UploadActivity.this).load(task.getResult().toString()).into(imageView);
-                                    }
-                                });
+//                                StorageReference sr = storageReference.child("images/"+bannerList.get(0).getImgUrl());
+//
+//                                sr.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<Uri> task) {
+//                                        Log.i("to", task.toString());
+//                                    }
+//                                });
                             } else {
                                 Log.d("TAG", "Error getting documents: ", task.getException());
                             }
@@ -223,20 +223,27 @@ public class UploadActivity extends AppCompatActivity {
             String imageName = UUID.randomUUID().toString();
             StorageReference ref = storageReference.child("images/" + imageName);
 
+
             ref.putFile(filePath).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                     String path = task.getResult().toString();
-                    Banner banner = new Banner(imageName);
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("banners").document().set(banner).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    Toast.makeText(UploadActivity.this, "Image Uploaded!!", Toast.LENGTH_SHORT).show();
+                    ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            Toast.makeText(UploadActivity.this, "Image Saved in Database!!", Toast.LENGTH_SHORT).show();
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            Log.i("to", task.toString());
+                            Banner banner = new Banner(task.getResult().toString());
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            db.collection("banners").document().set(banner).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(UploadActivity.this, "Image Saved in Database!!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            progressDialog.dismiss();
                         }
                     });
-                    progressDialog.dismiss();
-                    Toast.makeText(UploadActivity.this, "Image Uploaded!!", Toast.LENGTH_SHORT).show();
 
                 }
             })

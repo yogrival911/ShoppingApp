@@ -17,18 +17,52 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 import com.yogdroidtech.mallfirebase.UploadActivity;
 import com.yogdroidtech.mallfirebase.model.Banner;
+import com.yogdroidtech.mallfirebase.model.Products;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeViewModel extends ViewModel {
     private MutableLiveData<List<Banner>> bannerList;
+    private MutableLiveData<List<Products>> productList;
+
     public LiveData<List<Banner>> getBanners() {
         if (bannerList == null) {
             bannerList = new MutableLiveData<List<Banner>>();
             loadBanners();
         }
         return bannerList;
+    }
+    public LiveData<List<Products>> getProducts() {
+        if (productList == null) {
+            productList = new MutableLiveData<List<Products>>();
+            loadProducts();
+        }
+        return productList;
+    }
+
+    private void loadProducts() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // Create a new user with a first and last name
+        db.collection("products")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<Products> products = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG", document.getId() + " => " + document.getData());
+                                Products product = document.toObject(Products.class);
+                                products.add(product);
+                            }
+                            productList.setValue(products);
+
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 
     private void loadBanners() {

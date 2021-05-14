@@ -1,4 +1,4 @@
-package com.yogdroidtech.mallfirebase;
+package com.yogdroidtech.mallfirebase.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,11 +7,10 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.smarteist.autoimageslider.SliderViewAdapter;
+import com.yogdroidtech.mallfirebase.R;
 import com.yogdroidtech.mallfirebase.model.Banner;
 
 import java.util.List;
-
-import butterknife.BindView;
 
 public class BannerSliderAdapter extends SliderViewAdapter<BannerSliderAdapter.SliderViewHolder> {
     private List<Banner> bannerList;
@@ -32,6 +31,8 @@ public class BannerSliderAdapter extends SliderViewAdapter<BannerSliderAdapter.S
 
     @Override
     public void onBindViewHolder(SliderViewHolder viewHolder, int position) {
+
+
         Glide.with(viewHolder.itemView.getContext()).load(bannerList.get(position).getImgUrl()).into(viewHolder.ivBanner);
 
     }

@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
     final Fragment fragment1 = new HomeFragment();
-    final Fragment fragment2 = new HomeFragment();
+    final Fragment fragment2 = new WishListFragment();
     final Fragment fragment3 = new WishListFragment();
     final FragmentManager fm = getSupportFragmentManager();
     Fragment active = fragment1;
