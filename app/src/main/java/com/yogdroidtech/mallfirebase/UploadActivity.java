@@ -141,7 +141,8 @@ public class UploadActivity extends AppCompatActivity {
                             .createSignInIntentBuilder()
                             .setAvailableProviders(providers)
                             .build(),
-                    RC_SIGN_IN);        }
+                    RC_SIGN_IN);
+        }
 
 
 

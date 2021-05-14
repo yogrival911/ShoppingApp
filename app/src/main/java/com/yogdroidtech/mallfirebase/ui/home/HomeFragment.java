@@ -42,6 +42,7 @@ public class HomeFragment extends Fragment {
     private StorageReference storageReference;
     private ProductListAdaptger productListAdaptger;
     private GridLayoutManager gridLayoutManager;
+    private static int RC_SIGN_IN= 123;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -56,6 +57,7 @@ public class HomeFragment extends Fragment {
         sliderView = view.findViewById(R.id.slider);
         upload = view.findViewById(R.id.button4);
         rvNewArrival = view.findViewById(R.id.rvNewArrival);
+        rvNewArrival.setNestedScrollingEnabled(false);
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

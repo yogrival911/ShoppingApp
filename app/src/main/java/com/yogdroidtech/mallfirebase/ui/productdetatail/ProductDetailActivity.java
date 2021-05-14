@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,6 +31,8 @@ private FirebaseAuth firebaseAuth;
 SliderView sliderView;
 @BindView(R.id.button3)
 Button addToCart;
+@BindView(R.id.imageView6)
+ImageView addToWish;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +50,12 @@ Button addToCart;
                 addToCartCall();
             }
         });
+        addToWish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addToWishCall();
+            }
+        });
 
         productSliderAdapter = new ProductSliderAdapter(productDetail.getImgUrlList());
         sliderView.setSliderAdapter(productSliderAdapter);
@@ -55,9 +64,17 @@ Button addToCart;
         sliderView.startAutoCycle();
     }
 
+    private void addToWishCall() {
+        productDetail.setWishList(true);
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("wishlist").document(String.valueOf(productDetail.getId())).set(productDetail);
+
+    }
+
+
     private void addToCartCall() {
         productDetail.setQuantity(4);
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("wishlist").document(String.valueOf(productDetail.getId())).set(productDetail);
+        firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("cart").document(String.valueOf(productDetail.getId())).set(productDetail);
     }
 }
