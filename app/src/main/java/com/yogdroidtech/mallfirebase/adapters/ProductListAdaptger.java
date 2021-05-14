@@ -1,5 +1,6 @@
 package com.yogdroidtech.mallfirebase.adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.yogdroidtech.mallfirebase.R;
 import com.yogdroidtech.mallfirebase.model.Products;
+import com.yogdroidtech.mallfirebase.ui.productdetatail.ProductDetailActivity;
 
 import java.util.List;
 
@@ -30,8 +32,16 @@ public class ProductListAdaptger extends RecyclerView.Adapter<ProductListAdaptge
 
     @Override
     public void onBindViewHolder(@NonNull ProductsViewHolder holder, int position) {
-        Glide.with(holder.itemView.getContext()).load(productsList.get(position).getImgUrl()).into(holder.ivProduct);
+        Glide.with(holder.itemView.getContext()).load(productsList.get(position).getImgUrlList().get(0)).into(holder.ivProduct);
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(holder.itemView.getContext(), ProductDetailActivity.class);
+                intent.putExtra("productDetail", productsList.get(position));
+                holder.itemView.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override

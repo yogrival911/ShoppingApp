@@ -52,8 +52,24 @@ public class HomeViewModel extends ViewModel {
                         if (task.isSuccessful()) {
                             List<Products> products = new ArrayList<>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG", document.getId() + " => " + document.getData());
-                                Products product = document.toObject(Products.class);
+                                Log.d("TAG", document.getId() + " => " + document.get("imgUrl"));
+                                List<String> imgUrlList =(List<String>) document.get("imgUrl");
+                                String productName = (String)document.get("productName");
+                                String category = (String)document.get("category");
+                                String subCategory = (String) document.get("subCategory");
+                                String unit =(String) document.get("unit");
+                                Boolean isWishList = (Boolean)document.get("isWishList");
+                                Long id = (Long)document.get("id");
+                                int idInt = id.intValue();
+
+                                Long maxPrice = (Long)document.get("markPrice");
+                                int maxPriceInt = maxPrice.intValue();
+
+                                Long sellPrice = (Long)document.get("sellPrice");
+                                int sellPriceInt = sellPrice.intValue();
+
+                                Products product = new Products(productName,category,subCategory,idInt,maxPriceInt,sellPriceInt,isWishList,unit);
+                                product.setImgUrlList(imgUrlList);
                                 products.add(product);
                             }
                             productList.setValue(products);

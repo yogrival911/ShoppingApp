@@ -1,6 +1,10 @@
 package com.yogdroidtech.mallfirebase.model;
 
+import androidx.lifecycle.LifecycleService;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.PrimitiveIterator;
 
 import bolts.Bolts;
@@ -16,12 +20,24 @@ public class Products implements Serializable {
     private Boolean isWishList;
     private String unit ;
     private String imgUrl;
+    private List<String> imgUrlList = new ArrayList<>();
+    private int quantity;
 
-    public Products(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public Products(String productName, String category, String subCategory, int id, int markPrice, int sellPrice, Boolean isWishList, String unit) {
+        this.productName = productName;
+        this.category = category;
+        this.subCategory = subCategory;
+        this.id = id;
+        this.markPrice = markPrice;
+        this.sellPrice = sellPrice;
+        this.isWishList = isWishList;
+        this.unit = unit;
     }
 
-    public Products(String productName, String category, String subCategory, int id, int markPrice, int sellPrice, Boolean isWishList, String unit, String imgUrl) {
+    public Products() {
+    }
+
+    public Products(String productName, String category, String subCategory, int id, int markPrice, int sellPrice, Boolean isWishList, String unit, String imgUrl, List<String> imgUrlList) {
         this.productName = productName;
         this.category = category;
         this.subCategory = subCategory;
@@ -31,9 +47,15 @@ public class Products implements Serializable {
         this.isWishList = isWishList;
         this.unit = unit;
         this.imgUrl = imgUrl;
+        this.imgUrlList = imgUrlList;
     }
 
-    public Products() {
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public String getProductName() {
@@ -108,4 +130,11 @@ public class Products implements Serializable {
         this.imgUrl = imgUrl;
     }
 
+    public List<String> getImgUrlList() {
+        return imgUrlList;
+    }
+
+    public void setImgUrlList(List<String> imgUrlList) {
+        this.imgUrlList = imgUrlList;
+    }
 }
