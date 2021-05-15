@@ -65,7 +65,8 @@ public class HomeViewModel extends ViewModel {
 //                                String cat = (String)document;
                                 String categoryName = (String)document.getId();
                                 String catImgUrl = (String)document.get("catImgUrl");
-                                Category category = new Category(categoryName, catImgUrl);
+                                List<String> subCats = (List<String>) document.get("subCategories");
+                                Category category = new Category(categoryName, catImgUrl, subCats);
                                 categories.add(category);
                             }
                             categoryList.setValue(categories);
