@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.yogdroidtech.mallfirebase.R;
+import com.yogdroidtech.mallfirebase.adapters.ProductListAdaptger;
 import com.yogdroidtech.mallfirebase.adapters.SubCatAdapter;
 import com.yogdroidtech.mallfirebase.model.Category;
 import com.yogdroidtech.mallfirebase.model.Products;
@@ -27,13 +28,17 @@ import butterknife.ButterKnife;
 
 public class ProductListActivity extends AppCompatActivity {
 private LinearLayoutManager linearLayoutManager;
+private GridLayoutManager gridLayoutManager;
 private SubCatAdapter subCatAdapter;
 private Category category;
 private List<String> subCatList;
 private List<Products> productsList;
+private ProductListAdaptger productListAdaptger;
 
     @BindView(R.id.rvSubCat)
     RecyclerView rvSubCat;
+    @BindView(R.id.rvProducts)
+    RecyclerView rvProducts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +56,16 @@ private List<Products> productsList;
         subCatAdapter =  new SubCatAdapter(subCatList);
         rvSubCat.setAdapter(subCatAdapter);
 
+        gridLayoutManager = new GridLayoutManager(this, 2);
+        rvProducts.setLayoutManager(gridLayoutManager);
+
+
+       getProducts();
+
+
+    }
+
+    private void getProducts() {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         // Create a new user with a first and last name
         firestore.collection("products").
@@ -83,13 +98,17 @@ private List<Products> productsList;
                     }
                     productsList = products;
                     Log.i("y", productsList.toString());
+                    setProducts(productsList);
+
                 } else {
                     Log.d("TAG", "Error getting documents: ", task.getException());
                 }
-
             }
         });
+    }
 
-
+    private void setProducts(List<Products> productsList) {
+        productListAdaptger = new ProductListAdaptger(productsList);
+        rvProducts.setAdapter(productListAdaptger);
     }
 }
