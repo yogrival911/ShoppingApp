@@ -17,6 +17,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.StorageReference;
 import com.yogdroidtech.mallfirebase.UploadActivity;
 import com.yogdroidtech.mallfirebase.model.Banner;
+import com.yogdroidtech.mallfirebase.model.Category;
 import com.yogdroidtech.mallfirebase.model.Products;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.List;
 public class HomeViewModel extends ViewModel {
     private MutableLiveData<List<Banner>> bannerList;
     private MutableLiveData<List<Products>> productList;
+    private MutableLiveData<List<Category>> categoryList;
 
     public LiveData<List<Banner>> getBanners() {
         if (bannerList == null) {
@@ -39,6 +41,40 @@ public class HomeViewModel extends ViewModel {
             loadProducts();
         }
         return productList;
+    }
+    public LiveData<List<Category>> getCategories() {
+        if (categoryList == null) {
+            categoryList = new MutableLiveData<List<Category>>();
+            loadCategories();
+        }
+        return categoryList;
+    }
+
+    private void loadCategories() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // Create a new user with a first and last name
+        db.collection("categories")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<Category> categories = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG", document.getId() + " => " + document.getData());
+//                                String cat = (String)document;
+                                String categoryName = (String)document.getId();
+                                String catImgUrl = (String)document.get("catImgUrl");
+                                Category category = new Category(categoryName, catImgUrl);
+                                categories.add(category);
+                            }
+                            categoryList.setValue(categories);
+
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 
     private void loadProducts() {
