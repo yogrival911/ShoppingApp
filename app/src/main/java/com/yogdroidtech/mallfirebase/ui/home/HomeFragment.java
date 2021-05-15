@@ -96,7 +96,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onChanged(List<Products> products) {
                 productListAdaptger = new ProductListAdaptger(products);
-                gridLayoutManager = new GridLayoutManager(getContext(), 2);
+                gridLayoutManager = new GridLayoutManager(getActivity(), 2);
                 rvNewArrival.setLayoutManager(gridLayoutManager);
                 rvNewArrival.setAdapter(productListAdaptger);
             }
