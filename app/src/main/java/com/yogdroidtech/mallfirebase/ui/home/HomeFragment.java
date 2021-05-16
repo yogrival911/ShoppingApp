@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -25,6 +26,7 @@ import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnima
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 import com.yogdroidtech.mallfirebase.CircleProgressBarCustom;
+import com.yogdroidtech.mallfirebase.ProductSelectListener;
 import com.yogdroidtech.mallfirebase.adapters.BannerSliderAdapter;
 import com.yogdroidtech.mallfirebase.R;
 import com.yogdroidtech.mallfirebase.UploadActivity;
@@ -33,11 +35,14 @@ import com.yogdroidtech.mallfirebase.adapters.ProductListAdaptger;
 import com.yogdroidtech.mallfirebase.model.Banner;
 import com.yogdroidtech.mallfirebase.model.Category;
 import com.yogdroidtech.mallfirebase.model.Products;
+import com.yogdroidtech.mallfirebase.ui.productdetatail.ProductDetailActivity;
 
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
 
-public class HomeFragment extends Fragment {
+
+public class HomeFragment extends Fragment implements ProductSelectListener {
     private String imgUrl = "https://img.freepik.com/free-psd/digital-marketing-facebook-banner-template_237398-233.jpg?size=626&ext=jpg";
     private String imgUrl2 = "https://img.freepik.com/free-psd/digital-marketing-social-network-cover-web-banner-template_237398-271.jpg?size=626&ext=jpg";
     private String imgUrl3 = "https://img.freepik.com/free-psd/digital-marketing-facebook-banner-template_237398-233.jpg?size=626&ext=jpg";
@@ -129,7 +134,7 @@ public class HomeFragment extends Fragment {
         homeViewModel.getProducts().observe(getActivity(), new Observer<List<Products>>() {
             @Override
             public void onChanged(List<Products> products) {
-                productListAdaptger = new ProductListAdaptger(products);
+                productListAdaptger = new ProductListAdaptger(products, HomeFragment.this::onClick);
                 rvNewArrival.setAdapter(productListAdaptger);
                 rvCategory.setAdapter(productListAdaptger);
                 getCategories();
@@ -161,5 +166,12 @@ public class HomeFragment extends Fragment {
         HomeFragment fragment = new HomeFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onClick(Products product) {
+        Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
+        intent.putExtra("productDetail", product);
+        getActivity().startActivityForResult(intent,9);
     }
 }

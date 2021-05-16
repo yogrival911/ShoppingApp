@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,8 +35,9 @@ public class MainActivity extends AppCompatActivity {
     Fragment fragment1 = new HomeFragment();
     Fragment fragment2 = new WishlistFragment();
     Fragment fragment3 = new WishlistFragment();
-    final FragmentManager fm = getSupportFragmentManager();
+    FragmentManager fm = getSupportFragmentManager();
     private static int RC_SIGN_IN= 123;
+    private Boolean isRefresh = false;
     Fragment active = fragment1;
 
     @BindView(R.id.bottomNavigationView)
@@ -138,6 +140,25 @@ public class MainActivity extends AppCompatActivity {
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.
                 // ...
+            }
+        }
+        if(requestCode == 9){
+            if(resultCode == 111){
+//                Log.i("ll", data.getData().toString());
+                isRefresh = data.getBooleanExtra("isRefresh", false);
+                Log.i("t", isRefresh.toString());
+                if(isRefresh){
+                    //final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    Fragment frg = getSupportFragmentManager().findFragmentByTag("2");
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.detach(frg);
+                    ft.attach(frg);
+                    ft.commit();
+
+                }
+            }
+            else{
+                Log.i("k", data.getData().toString());
             }
         }
     }

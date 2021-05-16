@@ -22,10 +22,10 @@ import java.util.List;
 public class WishlistViewModel extends ViewModel {
     private MutableLiveData<List<Products>> productList;
     public LiveData<List<Products>> getProducts() {
-        if (productList == null) {
+//        if (productList == null) { //// uncomment to retain data. It was preventing refresh of fragment with new data
             productList = new MutableLiveData<List<Products>>();
             loadProducts();
-        }
+//        }
         return productList;
     }
 

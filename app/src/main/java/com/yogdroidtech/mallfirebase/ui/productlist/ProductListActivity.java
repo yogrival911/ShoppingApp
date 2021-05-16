@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.yogdroidtech.mallfirebase.ProductSelectListener;
 import com.yogdroidtech.mallfirebase.R;
 import com.yogdroidtech.mallfirebase.adapters.ProductListAdaptger;
 import com.yogdroidtech.mallfirebase.adapters.SubCatAdapter;
@@ -26,7 +27,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ProductListActivity extends AppCompatActivity {
+public class ProductListActivity extends AppCompatActivity implements ProductSelectListener {
 private LinearLayoutManager linearLayoutManager;
 private GridLayoutManager gridLayoutManager;
 private SubCatAdapter subCatAdapter;
@@ -106,7 +107,12 @@ private ProductListAdaptger productListAdaptger;
     }
 
     private void setProducts(List<Products> productsList) {
-        productListAdaptger = new ProductListAdaptger(productsList);
+        productListAdaptger = new ProductListAdaptger(productsList, this::onClick);
         rvProducts.setAdapter(productListAdaptger);
+    }
+
+    @Override
+    public void onClick(Products product) {
+
     }
 }

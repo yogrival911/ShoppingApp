@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.yogdroidtech.mallfirebase.DeleteClickListener;
+import com.yogdroidtech.mallfirebase.ProductSelectListener;
 import com.yogdroidtech.mallfirebase.R;
 import com.yogdroidtech.mallfirebase.model.Products;
 import com.yogdroidtech.mallfirebase.ui.productdetatail.ProductDetailActivity;
@@ -21,9 +22,11 @@ public class ProductListAdaptger extends RecyclerView.Adapter<ProductListAdaptge
     private List<Products> productsList;
     private Boolean isDelete = false;
     private DeleteClickListener deleteClickListener;
+    private ProductSelectListener productSelectListener;
 
-    public ProductListAdaptger(List<Products> productsList) {
+    public ProductListAdaptger(List<Products> productsList, ProductSelectListener productSelectListener) {
         this.productsList = productsList;
+        this.productSelectListener = productSelectListener;
     }
 
     public ProductListAdaptger(List<Products> productsList, Boolean isDelete, DeleteClickListener deleteClickListener) {
@@ -56,9 +59,7 @@ public class ProductListAdaptger extends RecyclerView.Adapter<ProductListAdaptge
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(holder.itemView.getContext(), ProductDetailActivity.class);
-                intent.putExtra("productDetail", productsList.get(position));
-                holder.itemView.getContext().startActivity(intent);
+              productSelectListener.onClick(productsList.get(position));
             }
         });
     }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +34,7 @@ private Products productDetail;
 private ProductSliderAdapter productSliderAdapter;
 private FirebaseAuth firebaseAuth;
 private WishlistViewModel wishlistViewModel;
+private Boolean isRefresh = false;
 
 @BindView(R.id.slider)
 SliderView sliderView;
@@ -79,6 +81,7 @@ ImageView addToWish;
         firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("wishlist").document(String.valueOf(productDetail.getId())).set(productDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
+                isRefresh = true;
 //                Fragment currentFragment = getFragmentManager().findFragmentByTag("3");
 //                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
 //                fragmentTransaction.detach(currentFragment);
@@ -98,6 +101,7 @@ ImageView addToWish;
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Log.i("gg", "g");
+                isRefresh = true;
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -106,5 +110,15 @@ ImageView addToWish;
                 Log.i("gg", "g");
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        Intent intent=new Intent();
+        intent.putExtra("isRefresh",isRefresh);
+        setResult(111,intent);
+        super.onBackPressed();
+        finish();
     }
 }
