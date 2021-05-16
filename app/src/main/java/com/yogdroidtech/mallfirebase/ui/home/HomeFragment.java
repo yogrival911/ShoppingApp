@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.transition.CircularPropagation;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.google.firebase.storage.StorageReference;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
+import com.yogdroidtech.mallfirebase.CircleProgressBarCustom;
 import com.yogdroidtech.mallfirebase.adapters.BannerSliderAdapter;
 import com.yogdroidtech.mallfirebase.R;
 import com.yogdroidtech.mallfirebase.UploadActivity;
@@ -53,6 +55,7 @@ public class HomeFragment extends Fragment {
     private GridLayoutManager gridLayoutManager,gridLayoutManager2;
     private LinearLayoutManager linearLayoutManager;
     private static int RC_SIGN_IN= 123;
+    private CircleProgressBarCustom progressBarCustom;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -65,9 +68,9 @@ public class HomeFragment extends Fragment {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         sliderView = view.findViewById(R.id.slider);
-        upload = view.findViewById(R.id.button4);
         rvNewArrival = view.findViewById(R.id.rvNewArrival);
         rvCategory = view.findViewById(R.id.rvCategory);
+        progressBarCustom = view.findViewById(R.id.circularProgressBar);
 
         gridLayoutManager = new GridLayoutManager(getContext(), 2);
         gridLayoutManager2 = new GridLayoutManager(getContext(), 2);
@@ -75,21 +78,22 @@ public class HomeFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         rvCategory.setLayoutManager(gridLayoutManager);
-        rvCategory.setNestedScrollingEnabled(false);
+
+//        rvCategory.setNestedScrollingEnabled(false);
         rvNewArrival.setNestedScrollingEnabled(false);
+//
+//        rvCategory.setHasFixedSize(false);
+//        rvCategory.setHasFixedSize(false);
+
         rvNewArrival.setLayoutManager(gridLayoutManager2);
-        upload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext(), UploadActivity.class));
-            }
-        });
+
         makeList();
 
         return view;
     }
 
     private void makeList() {
+        progressBarCustom.setVisibility(View.VISIBLE);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
@@ -143,8 +147,19 @@ public class HomeFragment extends Fragment {
                 Log.i("u", categories.toString());
                 categoryAdapter = new CategoryAdapter(categories);
                 rvCategory.setAdapter(categoryAdapter);
+                progressBarCustom.clearAnimation();
+                progressBarCustom.setVisibility(View.GONE);
 
             }
         });
+    }
+
+    public static HomeFragment newInstance() {
+        
+        Bundle args = new Bundle();
+        
+        HomeFragment fragment = new HomeFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 }

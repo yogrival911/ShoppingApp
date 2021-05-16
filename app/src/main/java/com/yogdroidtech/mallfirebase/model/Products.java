@@ -19,8 +19,8 @@ public class Products implements Serializable {
     private int sellPrice;
     private Boolean isWishList;
     private String unit ;
-    private String imgUrl;
-    private List<String> imgUrlList = new ArrayList<>();
+
+    private List<String> imgUrl = new ArrayList<>();
     private int quantity;
 
     public Products(String productName, String category, String subCategory, int id, int markPrice, int sellPrice, Boolean isWishList, String unit) {
@@ -37,7 +37,7 @@ public class Products implements Serializable {
     public Products() {
     }
 
-    public Products(String productName, String category, String subCategory, int id, int markPrice, int sellPrice, Boolean isWishList, String unit, String imgUrl, List<String> imgUrlList) {
+    public Products(String productName, String category, String subCategory, int id, int markPrice, int sellPrice, Boolean isWishList, String unit, List<String> imgUrlList) {
         this.productName = productName;
         this.category = category;
         this.subCategory = subCategory;
@@ -46,8 +46,7 @@ public class Products implements Serializable {
         this.sellPrice = sellPrice;
         this.isWishList = isWishList;
         this.unit = unit;
-        this.imgUrl = imgUrl;
-        this.imgUrlList = imgUrlList;
+        this.imgUrl = imgUrlList;
     }
 
     public int getQuantity() {
@@ -122,19 +121,12 @@ public class Products implements Serializable {
         this.unit = unit;
     }
 
-    public String getImgUrl() {
+
+    public List<String> getImgUrl() {
         return imgUrl;
     }
 
-    public void setImgUrl(String imgUrl) {
+    public void setImgUrl(List<String> imgUrl) {
         this.imgUrl = imgUrl;
-    }
-
-    public List<String> getImgUrlList() {
-        return imgUrlList;
-    }
-
-    public void setImgUrlList(List<String> imgUrlList) {
-        this.imgUrlList = imgUrlList;
     }
 }

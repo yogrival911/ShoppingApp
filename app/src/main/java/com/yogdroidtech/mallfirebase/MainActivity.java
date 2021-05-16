@@ -14,8 +14,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.firebase.ui.auth.AuthUI;
@@ -24,7 +22,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.yogdroidtech.mallfirebase.ui.home.HomeFragment;
-import com.yogdroidtech.mallfirebase.ui.wishlist.WishListFragment;
+import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistFragment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,9 +31,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-    final Fragment fragment1 = new HomeFragment();
-    final Fragment fragment2 = new WishListFragment();
-    final Fragment fragment3 = new WishListFragment();
+    Fragment fragment1 = new HomeFragment();
+    Fragment fragment2 = new WishlistFragment();
+    Fragment fragment3 = new WishlistFragment();
     final FragmentManager fm = getSupportFragmentManager();
     private static int RC_SIGN_IN= 123;
     Fragment active = fragment1;
@@ -60,11 +58,10 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        setSupportActionBar(toolbar);
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        setSupportActionBar(toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -85,7 +82,9 @@ public class MainActivity extends AppCompatActivity {
                    RC_SIGN_IN);
        }
        else{
-       setUpFragments();
+           if (savedInstanceState == null) {
+               setUpFragments();
+           }
 
        }
 
@@ -141,12 +140,6 @@ public class MainActivity extends AppCompatActivity {
                 // ...
             }
         }
-    }
-
-    @Override
-    protected void onNightModeChanged(int mode) {
-        super.onNightModeChanged(mode);
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
     }
 
 }

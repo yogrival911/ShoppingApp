@@ -2,7 +2,10 @@ package com.yogdroidtech.mallfirebase.ui.productdetatail;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,14 +13,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.smarteist.autoimageslider.SliderView;
 import com.yogdroidtech.mallfirebase.R;
 import com.yogdroidtech.mallfirebase.adapters.ProductSliderAdapter;
 import com.yogdroidtech.mallfirebase.model.Products;
+import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,6 +32,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 private Products productDetail;
 private ProductSliderAdapter productSliderAdapter;
 private FirebaseAuth firebaseAuth;
+private WishlistViewModel wishlistViewModel;
 
 @BindView(R.id.slider)
 SliderView sliderView;
@@ -39,6 +46,8 @@ ImageView addToWish;
         setContentView(R.layout.activity_product_detail);
 
         ButterKnife.bind(this);
+
+        wishlistViewModel = wishlistViewModel = new ViewModelProvider(this).get(WishlistViewModel.class);
 
         productDetail = (Products) getIntent().getSerializableExtra("productDetail");
         Log.i("yog", productDetail.toString());
@@ -57,7 +66,7 @@ ImageView addToWish;
             }
         });
 
-        productSliderAdapter = new ProductSliderAdapter(productDetail.getImgUrlList());
+        productSliderAdapter = new ProductSliderAdapter(productDetail.getImgUrl());
         sliderView.setSliderAdapter(productSliderAdapter);
         sliderView.setScrollTimeInSec(2);
         sliderView.setAutoCycle(true);
@@ -67,14 +76,35 @@ ImageView addToWish;
     private void addToWishCall() {
         productDetail.setWishList(true);
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("wishlist").document(String.valueOf(productDetail.getId())).set(productDetail);
+        firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("wishlist").document(String.valueOf(productDetail.getId())).set(productDetail).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+//                Fragment currentFragment = getFragmentManager().findFragmentByTag("3");
+//                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+//                fragmentTransaction.detach(currentFragment);
+//                fragmentTransaction.attach(currentFragment);
+//                fragmentTransaction.commit();
+//                wishlistViewModel.refreshProducts();
+            }
+        });
 
     }
 
 
     private void addToCartCall() {
-        productDetail.setQuantity(4);
+        productDetail.setQuantity(2);
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("cart").document(String.valueOf(productDetail.getId())).set(productDetail);
+        firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("cart").document(String.valueOf(productDetail.getId())).set(productDetail).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.i("gg", "g");
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("gg", "g");
+            }
+        });
     }
 }

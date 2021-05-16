@@ -106,7 +106,7 @@ public class HomeViewModel extends ViewModel {
                                 int sellPriceInt = sellPrice.intValue();
 
                                 Products product = new Products(productName,category,subCategory,idInt,maxPriceInt,sellPriceInt,isWishList,unit);
-                                product.setImgUrlList(imgUrlList);
+                                product.setImgUrl(imgUrlList);
                                 products.add(product);
                             }
                             productList.setValue(products);

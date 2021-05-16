@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.yogdroidtech.mallfirebase.DeleteClickListener;
 import com.yogdroidtech.mallfirebase.R;
 import com.yogdroidtech.mallfirebase.model.Products;
 import com.yogdroidtech.mallfirebase.ui.productdetatail.ProductDetailActivity;
@@ -18,9 +19,17 @@ import java.util.List;
 
 public class ProductListAdaptger extends RecyclerView.Adapter<ProductListAdaptger.ProductsViewHolder> {
     private List<Products> productsList;
+    private Boolean isDelete = false;
+    private DeleteClickListener deleteClickListener;
 
     public ProductListAdaptger(List<Products> productsList) {
         this.productsList = productsList;
+    }
+
+    public ProductListAdaptger(List<Products> productsList, Boolean isDelete, DeleteClickListener deleteClickListener) {
+        this.productsList = productsList;
+        this.isDelete = isDelete;
+        this.deleteClickListener = deleteClickListener;
     }
 
     @NonNull
@@ -32,8 +41,18 @@ public class ProductListAdaptger extends RecyclerView.Adapter<ProductListAdaptge
 
     @Override
     public void onBindViewHolder(@NonNull ProductsViewHolder holder, int position) {
-        Glide.with(holder.itemView.getContext()).load(productsList.get(position).getImgUrlList().get(0)).into(holder.ivProduct);
 
+        Glide.with(holder.itemView.getContext()).load(productsList.get(position).getImgUrl().get(0)).into(holder.ivProduct);
+
+        if(isDelete) {
+            holder.delete.setVisibility(View.VISIBLE);
+            holder.delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deleteClickListener.onClick(productsList.get(position).getId());
+                }
+            });
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,10 +69,11 @@ public class ProductListAdaptger extends RecyclerView.Adapter<ProductListAdaptge
     }
 
     public class ProductsViewHolder extends RecyclerView.ViewHolder {
-        ImageView ivProduct;
+        ImageView ivProduct, delete;
         public ProductsViewHolder(@NonNull View itemView) {
             super(itemView);
             ivProduct = itemView.findViewById(R.id.imageView4);
+            delete = itemView.findViewById(R.id.imageView7);
         }
     }
 }
