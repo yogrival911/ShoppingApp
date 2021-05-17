@@ -19,10 +19,12 @@ public class Products implements Serializable {
     private int sellPrice;
     private Boolean isWishList;
     private String unit ;
-
-    private List<String> imgUrl = new ArrayList<>();
     private int quantity;
+    private List<String> imgUrl = new ArrayList<>();
 
+
+    public Products() {
+    }
     public Products(String productName, String category, String subCategory, String id, int markPrice, int sellPrice, Boolean isWishList, String unit) {
         this.productName = productName;
         this.category = category;
@@ -34,10 +36,7 @@ public class Products implements Serializable {
         this.unit = unit;
     }
 
-    public Products() {
-    }
-
-    public Products(String productName, String category, String subCategory, String id, int markPrice, int sellPrice, Boolean isWishList, String unit, List<String> imgUrlList) {
+    public Products(String productName, String category, String subCategory, String id, int markPrice, int sellPrice, Boolean isWishList, String unit, int quantity) {
         this.productName = productName;
         this.category = category;
         this.subCategory = subCategory;
@@ -46,7 +45,7 @@ public class Products implements Serializable {
         this.sellPrice = sellPrice;
         this.isWishList = isWishList;
         this.unit = unit;
-        this.imgUrl = imgUrlList;
+        this.quantity = quantity;
     }
 
     public int getQuantity() {

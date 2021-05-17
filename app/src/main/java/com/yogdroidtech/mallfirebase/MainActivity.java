@@ -17,12 +17,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.Switch;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.yogdroidtech.mallfirebase.ui.cart.CartActivity;
 import com.yogdroidtech.mallfirebase.ui.home.HomeFragment;
 import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistFragment;
 
@@ -43,16 +46,14 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.bottomNavigationView)
     BottomNavigationView bottomNavigationView;
-
     @BindView(R.id.frame_container)
     FrameLayout frame_container;
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
-
+    @BindView(R.id.nav_view)
+    NavigationView nav_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,18 @@ public class MainActivity extends AppCompatActivity {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
+
+        nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.cart:
+                        startActivity(new Intent(MainActivity.this, CartActivity.class));
+                        return true;
+                }
+                return false;
+            }
+        });
 
        if(FirebaseAuth.getInstance().getCurrentUser()==null){
 

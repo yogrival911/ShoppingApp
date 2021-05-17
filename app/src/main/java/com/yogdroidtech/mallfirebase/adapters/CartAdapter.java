@@ -3,10 +3,13 @@ package com.yogdroidtech.mallfirebase.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.yogdroidtech.mallfirebase.CartRemoveListner;
 import com.yogdroidtech.mallfirebase.R;
 import com.yogdroidtech.mallfirebase.model.Products;
 
@@ -14,9 +17,11 @@ import java.util.List;
 
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
     private List<Products> productsList;
+    private CartRemoveListner cartRemoveListner;
 
-    public CartAdapter(List<Products> productsList) {
+    public CartAdapter(List<Products> productsList, CartRemoveListner cartRemoveListner) {
         this.productsList = productsList;
+        this.cartRemoveListner = cartRemoveListner;
     }
 
     @NonNull
@@ -28,7 +33,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
-
+        holder.tvQuanity.setText(productsList.get(position).getQuantity()+"");
+        holder.sellPrice.setText(productsList.get(position).getSellPrice()+"");
+        holder.removeCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cartRemoveListner.onCartRemove(productsList.get(position), position);
+            }
+        });
     }
 
     @Override
@@ -37,8 +49,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     }
 
     public class CartViewHolder extends RecyclerView.ViewHolder {
+        TextView tvQuanity,sellPrice;
+        ImageView removeCart;
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
+            tvQuanity = itemView.findViewById(R.id.tvQuanity);
+            sellPrice = itemView.findViewById(R.id.sellPrice);
+            removeCart = itemView.findViewById(R.id.removeCart);
         }
     }
 }

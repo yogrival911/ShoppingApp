@@ -47,6 +47,8 @@ public class CartViewModel extends ViewModel {
                                 Boolean isWishList = (Boolean)document.get("isWishList");
                                 String id = (String)document.get("id");
 
+                                Long quantity = (Long)document.get("quantity");
+                                int quantInt = quantity.intValue();
 
                                 Long maxPrice = (Long)document.get("markPrice");
                                 int maxPriceInt = maxPrice.intValue();
@@ -54,8 +56,7 @@ public class CartViewModel extends ViewModel {
                                 Long sellPrice = (Long)document.get("sellPrice");
                                 int sellPriceInt = sellPrice.intValue();
 
-                                Products product = new Products(productName,category,subCategory,id,maxPriceInt,sellPriceInt,isWishList,unit);
-                                product.setImgUrl(imgUrlList);
+                                Products product = new Products(productName,category,subCategory,id,maxPriceInt,sellPriceInt,isWishList,unit,quantInt);
                                 products.add(product);
                             }
                             productList.setValue(products);
@@ -66,4 +67,5 @@ public class CartViewModel extends ViewModel {
                     }
                 });
     }
+
 }

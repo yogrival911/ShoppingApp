@@ -55,11 +55,20 @@ public class ProductListAdaptger extends RecyclerView.Adapter<ProductListAdaptge
                     deleteClickListener.onClick(productsList.get(position).getId(), position);
                 }
             });
+
         }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              productSelectListener.onClick(productsList.get(position));
+                if(isDelete){
+                    Intent intent = new Intent(holder.itemView.getContext(),ProductDetailActivity.class);
+                    intent.putExtra("productDetail", productsList.get(position));
+                    holder.itemView.getContext().startActivity(intent);
+                }
+                else {
+                    productSelectListener.onClick(productsList.get(position));
+
+                }
             }
         });
     }
