@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:cardView="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/carView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    cardView:cardCornerRadius="8dp"
+    cardView:cardElevation="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
+
+        <ImageView
+            android:id="@+id/proImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            cardView:layout_constraintBottom_toBottomOf="parent"
+            cardView:layout_constraintStart_toStartOf="parent"
+
+            cardView:layout_constraintTop_toTopOf="parent"
+            cardView:srcCompat="@drawable/ic_launcher_foreground"
+            tools:background="@drawable/ic_launcher_foreground" />
+
+        <ImageView
+            android:id="@+id/cartIncrement"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            cardView:layout_constraintBottom_toBottomOf="@+id/linear"
+            cardView:layout_constraintEnd_toEndOf="parent"
+            cardView:srcCompat="@drawable/ic_baseline_add_circle_outline_24" />
+
+        <ImageView
+            android:id="@+id/cartDecrement"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            cardView:layout_constraintBottom_toBottomOf="@+id/tvQuanity"
+            cardView:layout_constraintEnd_toStartOf="@+id/tvQuanity"
+            cardView:layout_constraintTop_toTopOf="@+id/tvQuanity"
+            cardView:srcCompat="@drawable/ic_baseline_remove_circle_outline_24" />
+
+        <TextView
+            android:id="@+id/tvQuanity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="22"
+            android:textSize="16sp"
+            cardView:layout_constraintBottom_toBottomOf="@+id/cartIncrement"
+            cardView:layout_constraintEnd_toStartOf="@+id/cartIncrement"
+            cardView:layout_constraintTop_toTopOf="@+id/cartIncrement" />
+
+        <LinearLayout
+            android:id="@+id/linear"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:gravity="fill_vertical"
+            android:orientation="vertical"
+            cardView:layout_constraintBottom_toBottomOf="@+id/proImage"
+            cardView:layout_constraintEnd_toEndOf="parent"
+            cardView:layout_constraintStart_toEndOf="@+id/proImage"
+            cardView:layout_constraintTop_toTopOf="@+id/proImage">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/sellPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="fill_vertical"
+                    android:text="Rs. 45/-"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    cardView:layout_constraintBottom_toBottomOf="parent"
+                    cardView:layout_constraintStart_toStartOf="parent"
+                    cardView:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="50"
+                    cardView:layout_constraintBottom_toBottomOf="@+id/sellPrice"
+                    cardView:layout_constraintStart_toEndOf="@+id/sellPrice"
+                    cardView:layout_constraintTop_toTopOf="@+id/sellPrice" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/proName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Vegetables"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tvQuanityUnit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="fill_vertical"
+                android:text="500 gams" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

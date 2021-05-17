@@ -24,6 +24,7 @@ import com.yogdroidtech.mallfirebase.model.Products;
 import com.yogdroidtech.mallfirebase.ui.home.HomeViewModel;
 import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,10 +32,10 @@ import butterknife.BindView;
 
 public class WishlistFragment extends Fragment implements DeleteClickListener {
 private WishlistViewModel wishlistViewModel;
-private List<Products> productsList;
 private ProductListAdaptger productListAdaptger;
 private GridLayoutManager gridLayoutManager;
 private RecyclerView recyclerView;
+private List<Products> productsList = new ArrayList<>();
     public WishlistFragment() {
         // Required empty public constructor
     }
@@ -51,7 +52,8 @@ private RecyclerView recyclerView;
             @Override
             public void onChanged(List<Products> products) {
                 Log.i("y", products.toString());
-                productListAdaptger = new ProductListAdaptger(products, true, WishlistFragment.this::onClick);
+                productsList = products;
+                productListAdaptger = new ProductListAdaptger(productsList, true, WishlistFragment.this::onClick);
                 recyclerView.setAdapter(productListAdaptger);
             }
         });
@@ -60,7 +62,7 @@ private RecyclerView recyclerView;
     }
 
     @Override
-    public void onClick(int id) {
+    public void onClick(String id, int position) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         // Create a new user with a first and last name
         db.collection("users")
@@ -68,6 +70,9 @@ private RecyclerView recyclerView;
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(getActivity(), "Removed", Toast.LENGTH_SHORT).show();
+                productsList.remove(position);
+                productListAdaptger.notifyDataSetChanged();
+
             }
         });
     }

@@ -25,6 +25,7 @@ import com.google.firebase.storage.StorageReference;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
+import com.yogdroidtech.mallfirebase.CategorySelectListner;
 import com.yogdroidtech.mallfirebase.CircleProgressBarCustom;
 import com.yogdroidtech.mallfirebase.ProductSelectListener;
 import com.yogdroidtech.mallfirebase.adapters.BannerSliderAdapter;
@@ -36,13 +37,14 @@ import com.yogdroidtech.mallfirebase.model.Banner;
 import com.yogdroidtech.mallfirebase.model.Category;
 import com.yogdroidtech.mallfirebase.model.Products;
 import com.yogdroidtech.mallfirebase.ui.productdetatail.ProductDetailActivity;
+import com.yogdroidtech.mallfirebase.ui.productlist.ProductListActivity;
 
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
 
-public class HomeFragment extends Fragment implements ProductSelectListener {
+public class HomeFragment extends Fragment implements ProductSelectListener , CategorySelectListner {
     private String imgUrl = "https://img.freepik.com/free-psd/digital-marketing-facebook-banner-template_237398-233.jpg?size=626&ext=jpg";
     private String imgUrl2 = "https://img.freepik.com/free-psd/digital-marketing-social-network-cover-web-banner-template_237398-271.jpg?size=626&ext=jpg";
     private String imgUrl3 = "https://img.freepik.com/free-psd/digital-marketing-facebook-banner-template_237398-233.jpg?size=626&ext=jpg";
@@ -150,7 +152,7 @@ public class HomeFragment extends Fragment implements ProductSelectListener {
             @Override
             public void onChanged(List<Category> categories) {
                 Log.i("u", categories.toString());
-                categoryAdapter = new CategoryAdapter(categories);
+                categoryAdapter = new CategoryAdapter(categories, HomeFragment.this::onCategorySelect);
                 rvCategory.setAdapter(categoryAdapter);
                 progressBarCustom.clearAnimation();
                 progressBarCustom.setVisibility(View.GONE);
@@ -159,19 +161,17 @@ public class HomeFragment extends Fragment implements ProductSelectListener {
         });
     }
 
-    public static HomeFragment newInstance() {
-        
-        Bundle args = new Bundle();
-        
-        HomeFragment fragment = new HomeFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onClick(Products product) {
         Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
         intent.putExtra("productDetail", product);
+        getActivity().startActivityForResult(intent,9);
+    }
+
+    @Override
+    public void onCategorySelect(Category category) {
+        Intent intent = new Intent(getActivity(), ProductListActivity.class);
+        intent.putExtra("category", category);
         getActivity().startActivityForResult(intent,9);
     }
 }

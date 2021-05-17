@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.yogdroidtech.mallfirebase.CategorySelectListner;
 import com.yogdroidtech.mallfirebase.R;
 import com.yogdroidtech.mallfirebase.model.Category;
 import com.yogdroidtech.mallfirebase.ui.productlist.ProductListActivity;
@@ -19,9 +20,11 @@ import java.util.List;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CatViewHolder> {
     private List<Category> categoryList;
+    private CategorySelectListner categorySelectListner;
 
-    public CategoryAdapter(List<Category> categoryList) {
+    public CategoryAdapter(List<Category> categoryList, CategorySelectListner categorySelectListner) {
         this.categoryList = categoryList;
+        this.categorySelectListner = categorySelectListner;
     }
 
     public void setCategoryList(List<Category> categoryList) {
@@ -42,9 +45,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CatVie
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(holder.itemView.getContext(), ProductListActivity.class);
-                intent.putExtra("category", categoryList.get(position));
-                holder.itemView.getContext().startActivity(intent);
+                categorySelectListner.onCategorySelect(categoryList.get(position));
             }
         });
     }

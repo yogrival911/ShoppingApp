@@ -96,8 +96,8 @@ public class HomeViewModel extends ViewModel {
                                 String subCategory = (String) document.get("subCategory");
                                 String unit =(String) document.get("unit");
                                 Boolean isWishList = (Boolean)document.get("isWishList");
-                                Long id = (Long)document.get("id");
-                                int idInt = id.intValue();
+                                String id =(String)document.get("id");
+
 
                                 Long maxPrice = (Long)document.get("markPrice");
                                 int maxPriceInt = maxPrice.intValue();
@@ -105,7 +105,7 @@ public class HomeViewModel extends ViewModel {
                                 Long sellPrice = (Long)document.get("sellPrice");
                                 int sellPriceInt = sellPrice.intValue();
 
-                                Products product = new Products(productName,category,subCategory,idInt,maxPriceInt,sellPriceInt,isWishList,unit);
+                                Products product = new Products(productName,category,subCategory,id,maxPriceInt,sellPriceInt,isWishList,unit);
                                 product.setImgUrl(imgUrlList);
                                 products.add(product);
                             }

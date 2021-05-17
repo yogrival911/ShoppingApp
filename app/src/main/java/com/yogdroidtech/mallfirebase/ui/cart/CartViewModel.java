@@ -1,4 +1,4 @@
-package com.yogdroidtech.mallfirebase.ui.wishlist;
+package com.yogdroidtech.mallfirebase.ui.cart;
 
 import android.util.Log;
 
@@ -13,31 +13,25 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.yogdroidtech.mallfirebase.model.Banner;
 import com.yogdroidtech.mallfirebase.model.Products;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WishlistViewModel extends ViewModel {
+public class CartViewModel extends ViewModel {
     private MutableLiveData<List<Products>> productList;
     public LiveData<List<Products>> getProducts() {
-//        if (productList == null) { //// uncomment to retain data. It was preventing refresh of fragment with new data
+        if (productList == null) {
             productList = new MutableLiveData<List<Products>>();
             loadProducts();
-//        }
+        }
         return productList;
     }
-
-    public void refreshProducts(){
-        loadProducts();
-    }
-
     private void loadProducts() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         // Create a new user with a first and last name
         db.collection("users")
-                .document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("wishlist").get()
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("cart").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -72,5 +66,4 @@ public class WishlistViewModel extends ViewModel {
                     }
                 });
     }
-
 }

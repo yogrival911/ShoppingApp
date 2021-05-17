@@ -52,7 +52,7 @@ public class ProductListAdaptger extends RecyclerView.Adapter<ProductListAdaptge
             holder.delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    deleteClickListener.onClick(productsList.get(position).getId());
+                    deleteClickListener.onClick(productsList.get(position).getId(), position);
                 }
             });
         }

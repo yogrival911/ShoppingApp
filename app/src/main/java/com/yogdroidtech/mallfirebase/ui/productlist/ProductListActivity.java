@@ -1,11 +1,15 @@
 package com.yogdroidtech.mallfirebase.ui.productlist;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -20,6 +24,7 @@ import com.yogdroidtech.mallfirebase.adapters.ProductListAdaptger;
 import com.yogdroidtech.mallfirebase.adapters.SubCatAdapter;
 import com.yogdroidtech.mallfirebase.model.Category;
 import com.yogdroidtech.mallfirebase.model.Products;
+import com.yogdroidtech.mallfirebase.ui.productdetatail.ProductDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +40,7 @@ private Category category;
 private List<String> subCatList;
 private List<Products> productsList;
 private ProductListAdaptger productListAdaptger;
+private Boolean isRefresh = false;
 
     @BindView(R.id.rvSubCat)
     RecyclerView rvSubCat;
@@ -68,7 +74,7 @@ private ProductListAdaptger productListAdaptger;
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         // Create a new user with a first and last name
         firestore.collection("products").
-                whereEqualTo("subCategory", "mobile").
+                whereEqualTo("subCategory", "Mobile").
                 get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -82,8 +88,8 @@ private ProductListAdaptger productListAdaptger;
                         String subCategory = (String) document.get("subCategory");
                         String unit =(String) document.get("unit");
                         Boolean isWishList = (Boolean)document.get("isWishList");
-                        Long id = (Long)document.get("id");
-                        int idInt = id.intValue();
+                        String id = (String)document.get("id");
+//                        int idInt = id.intValue();
 
                         Long maxPrice = (Long)document.get("markPrice");
                         int maxPriceInt = maxPrice.intValue();
@@ -91,7 +97,7 @@ private ProductListAdaptger productListAdaptger;
                         Long sellPrice = (Long)document.get("sellPrice");
                         int sellPriceInt = sellPrice.intValue();
 
-                        Products product = new Products(productName,category,subCategory,idInt,maxPriceInt,sellPriceInt,isWishList,unit);
+                        Products product = new Products(productName,category,subCategory,id,maxPriceInt,sellPriceInt,isWishList,unit);
                         product.setImgUrl(imgUrlList);
                         products.add(product);
                     }
@@ -113,6 +119,36 @@ private ProductListAdaptger productListAdaptger;
 
     @Override
     public void onClick(Products product) {
+        Intent intent = new Intent(this, ProductDetailActivity.class);
+        intent.putExtra("productDetail", product);
+        startActivityForResult(intent,999);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 999){
+            if(resultCode == 111){
+//                Log.i("ll", data.getData().toString());
+                isRefresh = data.getBooleanExtra("isRefresh", false);
+                Log.i("t", isRefresh.toString());
+                if(isRefresh){
+                    //final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+                }
+            }
+            else{
+                Log.i("k", data.getData().toString());
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent=new Intent();
+        intent.putExtra("isRefresh",isRefresh);
+        setResult(111,intent);
+        super.onBackPressed();
+        finish();
     }
 }
