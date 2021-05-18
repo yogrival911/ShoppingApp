@@ -35,6 +35,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.yogdroidtech.mallfirebase.model.Products;
 import com.yogdroidtech.mallfirebase.ui.cart.CartActivity;
 import com.yogdroidtech.mallfirebase.ui.home.HomeFragment;
+import com.yogdroidtech.mallfirebase.ui.search.SearchActivity;
 import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistFragment;
 
 import java.util.ArrayList;
@@ -129,6 +130,9 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.wishlist:
                         fm.beginTransaction().hide(active).show(fragment2).commit();
                         active = fragment2;
+                        return true;
+                    case R.id.search:
+                        startActivity(new Intent(MainActivity.this, SearchActivity.class));
                         return true;
 
                     case R.id.profile:

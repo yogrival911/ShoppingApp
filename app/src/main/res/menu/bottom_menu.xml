@@ -7,8 +7,12 @@
         android:title="Home" />
     <item
         android:id="@+id/wishlist"
-        android:icon="@drawable/category"
+        android:icon="@drawable/wish_list"
         android:title="Wish List" />
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="Search" />
     <item
         android:id="@+id/profile"
         android:icon="@drawable/profile"

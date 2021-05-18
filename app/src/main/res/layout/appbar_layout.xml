@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:foregroundGravity="fill"
-            android:src="@drawable/aw" />
+            android:src="@drawable/shop_now" />
 
     </androidx.appcompat.widget.Toolbar>
 

@@ -10,7 +10,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MallFirebase">
-        <activity android:name=".ui.cart.CartActivity"></activity>
+        <activity android:name=".ui.search.SearchActivity"></activity>
+        <activity android:name=".ui.cart.CartActivity" />
         <activity android:name=".ui.productlist.ProductListActivity" />
         <activity android:name=".ui.productdetatail.ProductDetailActivity" />
         <activity android:name=".UploadActivity" />
