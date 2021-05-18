@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -63,6 +64,7 @@ public class HomeFragment extends Fragment implements ProductSelectListener , Ca
     private LinearLayoutManager linearLayoutManager;
     private static int RC_SIGN_IN= 123;
     private CircleProgressBarCustom progressBarCustom;
+    private NestedScrollView scrollView;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -78,8 +80,10 @@ public class HomeFragment extends Fragment implements ProductSelectListener , Ca
         rvNewArrival = view.findViewById(R.id.rvNewArrival);
         rvCategory = view.findViewById(R.id.rvCategory);
         progressBarCustom = view.findViewById(R.id.circularProgressBar);
+        scrollView = view.findViewById(R.id.scroll);
+//        scrollView.setVisibility(View.GONE);
 
-        gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        gridLayoutManager = new GridLayoutManager(getContext(), 3);
         gridLayoutManager2 = new GridLayoutManager(getContext(), 2);
 
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -156,6 +160,7 @@ public class HomeFragment extends Fragment implements ProductSelectListener , Ca
                 rvCategory.setAdapter(categoryAdapter);
                 progressBarCustom.clearAnimation();
                 progressBarCustom.setVisibility(View.GONE);
+                scrollView.setVisibility(View.VISIBLE);
 
             }
         });

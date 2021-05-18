@@ -24,6 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="@dimen/vertical_margin"
                 android:layout_marginEnd="16dp"
                 app:cardCornerRadius="6dp">
 
@@ -52,8 +53,9 @@
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginLeft="@dimen/horizon_margin"
+                android:layout_marginTop="@dimen/vertical_margin"
+                android:fontFamily="@font/cagliostro"
                 android:text="Categories"
                 android:textColor="@color/black"
                 android:textSize="18sp"
@@ -62,7 +64,10 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvCategory"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/horizon_margin"
+                android:layout_marginTop="4dp"
+                android:layout_marginRight="@dimen/horizon_margin">
 
             </androidx.recyclerview.widget.RecyclerView>
 
@@ -71,7 +76,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/vertical_margin"
+                android:fontFamily="@font/cagliostro"
                 android:text="Recommended Products"
                 android:textColor="@color/black"
                 android:textSize="18sp"
@@ -81,7 +87,7 @@
                 android:id="@+id/rvNewArrival"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="4dp" />
 
         </LinearLayout>
 
