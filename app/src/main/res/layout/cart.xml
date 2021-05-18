@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="?attr/actionButtonStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:backgroundTint="#975252"
+    android:clipToPadding="false"
+    android:focusable="true">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#FFFFFF"
+        android:src="@drawable/ic_baseline_shopping_basket_24"
+        app:tint="#000000"
+        app:srcCompat="@drawable/ic_baseline_shopping_basket_24"
+        tools:srcCompat="@drawable/ic_baseline_shopping_basket_24" />
+
+    <TextView
+        android:id="@+id/cart_badge"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="right|end|top"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="-8dp"
+        android:layout_marginRight="-8dp"
+        android:background="@drawable/badge_background"
+        android:gravity="center"
+        android:padding="3dp"
+        android:text="0"
+        android:textColor="@android:color/white"
+        android:textSize="10sp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

@@ -34,8 +34,8 @@ private Products productDetail;
 private ProductSliderAdapter productSliderAdapter;
 private FirebaseAuth firebaseAuth;
 private WishlistViewModel wishlistViewModel;
-private Boolean isRefresh = false;
-
+private Boolean isRefresh = false; // wishlist refresh flag
+private Boolean isCartRefresh = false; //cartRefresh flag
 @BindView(R.id.slider)
 SliderView sliderView;
 @BindView(R.id.button3)
@@ -101,7 +101,7 @@ ImageView addToWish;
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Log.i("gg", "g");
-                isRefresh = true;
+                isCartRefresh = true;
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -117,6 +117,7 @@ ImageView addToWish;
 
         Intent intent=new Intent();
         intent.putExtra("isRefresh",isRefresh);
+        intent.putExtra("isCartRefresh",isCartRefresh);
         setResult(111,intent);
         super.onBackPressed();
         finish();

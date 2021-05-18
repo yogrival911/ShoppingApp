@@ -41,6 +41,7 @@ private List<String> subCatList;
 private List<Products> productsList;
 private ProductListAdaptger productListAdaptger;
 private Boolean isRefresh = false;
+private Boolean isCartRefresh = false;
 
     @BindView(R.id.rvSubCat)
     RecyclerView rvSubCat;
@@ -131,6 +132,7 @@ private Boolean isRefresh = false;
             if(resultCode == 111){
 //                Log.i("ll", data.getData().toString());
                 isRefresh = data.getBooleanExtra("isRefresh", false);
+                isCartRefresh = data.getBooleanExtra("isCartRefresh", false);
                 Log.i("t", isRefresh.toString());
                 if(isRefresh){
                     //final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -147,6 +149,7 @@ private Boolean isRefresh = false;
     public void onBackPressed() {
         Intent intent=new Intent();
         intent.putExtra("isRefresh",isRefresh);
+        intent.putExtra("isCartRefresh",isCartRefresh);
         setResult(111,intent);
         super.onBackPressed();
         finish();

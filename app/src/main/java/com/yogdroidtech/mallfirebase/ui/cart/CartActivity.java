@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ private CartAdapter cartAdapter;
 private CartViewModel cartViewModel;
 private LinearLayoutManager linearLayoutManager;
 private List<Products> productsList = new ArrayList<>();
+private Boolean isCartRefresh = false;
 private int grandTotal = 0;
 @BindView(R.id.rvCart)
 RecyclerView rvCart;
@@ -71,6 +73,7 @@ TextView tvTotal;
                 .document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("cart").document(product.getId()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
+                isCartRefresh = true;
                 productsList.remove(position);
                 cartAdapter.notifyDataSetChanged();
                 int quantity = product.getQuantity();
@@ -80,5 +83,14 @@ TextView tvTotal;
                 tvTotal.setText(""+ grandTotal);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent=new Intent();
+        intent.putExtra("isCartRefresh",isCartRefresh);
+        setResult(111,intent);
+        super.onBackPressed();
+        finish();
     }
 }

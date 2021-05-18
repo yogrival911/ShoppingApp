@@ -16,19 +16,28 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.yogdroidtech.mallfirebase.model.Products;
 import com.yogdroidtech.mallfirebase.ui.cart.CartActivity;
 import com.yogdroidtech.mallfirebase.ui.home.HomeFragment;
 import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistFragment;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,8 +50,11 @@ public class MainActivity extends AppCompatActivity {
     Fragment fragment3 = new WishlistFragment();
     FragmentManager fm = getSupportFragmentManager();
     private static int RC_SIGN_IN= 123;
-    private Boolean isRefresh = false;
+    private Boolean isRefresh = false;          //wishlist refresh
+    private Boolean isCartRefresh = false;      //cart refresh
     Fragment active = fragment1;
+    private TextView textCartItemCount;
+    private int mCartItemCount;
 
     @BindView(R.id.bottomNavigationView)
     BottomNavigationView bottomNavigationView;
@@ -100,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
        else{
            if (savedInstanceState == null) {
                setUpFragments();
+               loadCartProducts();
            }
 
        }
@@ -160,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
             if(resultCode == 111){
 //                Log.i("ll", data.getData().toString());
                 isRefresh = data.getBooleanExtra("isRefresh", false);
+                isCartRefresh = data.getBooleanExtra("isCartRefresh", false);
                 Log.i("t", isRefresh.toString());
                 if(isRefresh){
                     //final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -168,8 +182,11 @@ public class MainActivity extends AppCompatActivity {
                     ft.detach(frg);
                     ft.attach(frg);
                     ft.commit();
-
                 }
+                if(isCartRefresh){
+                    loadCartProducts();
+                }
+
             }
             else{
                 Log.i("k", data.getData().toString());
@@ -180,7 +197,83 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.top_right_menu, menu);
+        MenuItem menuItem = menu.findItem(R.id.action_cart);
+        View actionView = menuItem.getActionView();
+        textCartItemCount = (TextView) actionView.findViewById(R.id.cart_badge);
+        actionView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(menuItem);
+            }
+        });
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_cart:
+                startActivityForResult(new Intent(MainActivity.this, CartActivity.class),9);
+        }
+
         return true;
 
+    }
+
+    public void setupBadge() {
+        if (textCartItemCount != null) {
+            if (mCartItemCount == 0) {
+                if (textCartItemCount.getVisibility() != View.GONE) {
+                    textCartItemCount.setVisibility(View.GONE);
+                }
+            } else {
+                textCartItemCount.setText(String.valueOf(Math.min(mCartItemCount, 99)));
+                if (textCartItemCount.getVisibility() != View.VISIBLE) {
+                    textCartItemCount.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
+    private void loadCartProducts() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // Create a new user with a first and last name
+        db.collection("users")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("cart").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            List<Products> products = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("TAG", document.getId() + " => " + document.get("imgUrl"));
+                                List<String> imgUrlList =(List<String>) document.get("imgUrl");
+                                String productName = (String)document.get("productName");
+                                String category = (String)document.get("category");
+                                String subCategory = (String) document.get("subCategory");
+                                String unit =(String) document.get("unit");
+                                Boolean isWishList = (Boolean)document.get("isWishList");
+                                String id = (String)document.get("id");
+
+                                Long quantity = (Long)document.get("quantity");
+                                int quantInt = quantity.intValue();
+
+                                Long maxPrice = (Long)document.get("markPrice");
+                                int maxPriceInt = maxPrice.intValue();
+
+                                Long sellPrice = (Long)document.get("sellPrice");
+                                int sellPriceInt = sellPrice.intValue();
+
+                                Products product = new Products(productName,category,subCategory,id,maxPriceInt,sellPriceInt,isWishList,unit,quantInt);
+                                products.add(product);
+                            }
+                            mCartItemCount = products.size();
+                            setupBadge();
+
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 }
