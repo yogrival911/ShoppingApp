@@ -86,4 +86,12 @@ public class ProductListAdaptger extends RecyclerView.Adapter<ProductListAdaptge
             delete = itemView.findViewById(R.id.imageView7);
         }
     }
+    public void filterList(List<Products> products) {
+        // below line is to add our filtered
+        // list in our course array list.
+        productsList = products;
+        // below line is to notify our adapter
+        // as change in recycler view data.
+        notifyDataSetChanged();
+    }
 }

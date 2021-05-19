@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
@@ -39,6 +40,7 @@ import com.yogdroidtech.mallfirebase.model.Category;
 import com.yogdroidtech.mallfirebase.model.Products;
 import com.yogdroidtech.mallfirebase.ui.productdetatail.ProductDetailActivity;
 import com.yogdroidtech.mallfirebase.ui.productlist.ProductListActivity;
+import com.yogdroidtech.mallfirebase.ui.search.SearchActivity;
 
 import java.util.List;
 
@@ -65,6 +67,7 @@ public class HomeFragment extends Fragment implements ProductSelectListener , Ca
     private static int RC_SIGN_IN= 123;
     private CircleProgressBarCustom progressBarCustom;
     private NestedScrollView scrollView;
+    private ConstraintLayout searchLayout;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -81,6 +84,7 @@ public class HomeFragment extends Fragment implements ProductSelectListener , Ca
         rvCategory = view.findViewById(R.id.rvCategory);
         progressBarCustom = view.findViewById(R.id.circularProgressBar);
         scrollView = view.findViewById(R.id.scroll);
+        searchLayout = view.findViewById(R.id.searchLayout);
 //        scrollView.setVisibility(View.GONE);
 
         gridLayoutManager = new GridLayoutManager(getContext(), 3);
@@ -99,6 +103,12 @@ public class HomeFragment extends Fragment implements ProductSelectListener , Ca
         rvNewArrival.setLayoutManager(gridLayoutManager2);
 
         makeList();
+        searchLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().startActivityForResult(new Intent(getActivity(), SearchActivity.class),9);
+            }
+        });
 
         return view;
     }

@@ -20,6 +20,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.yogdroidtech.mallfirebase.ProductSelectListener;
 import com.yogdroidtech.mallfirebase.R;
+import com.yogdroidtech.mallfirebase.SubCatListener;
 import com.yogdroidtech.mallfirebase.adapters.ProductListAdaptger;
 import com.yogdroidtech.mallfirebase.adapters.SubCatAdapter;
 import com.yogdroidtech.mallfirebase.model.Category;
@@ -32,7 +33,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ProductListActivity extends AppCompatActivity implements ProductSelectListener {
+public class ProductListActivity extends AppCompatActivity implements ProductSelectListener, SubCatListener {
 private LinearLayoutManager linearLayoutManager;
 private GridLayoutManager gridLayoutManager;
 private SubCatAdapter subCatAdapter;
@@ -61,21 +62,21 @@ private Boolean isCartRefresh = false;
         linearLayoutManager = new LinearLayoutManager(this );
         linearLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
         rvSubCat.setLayoutManager(linearLayoutManager);
-        subCatAdapter =  new SubCatAdapter(subCatList);
+        subCatAdapter =  new SubCatAdapter(subCatList, this::onSubCatSelected);
         rvSubCat.setAdapter(subCatAdapter);
 
         gridLayoutManager = new GridLayoutManager(this, 2);
         rvProducts.setLayoutManager(gridLayoutManager);
 
-       getProducts();
+       getProducts(subCatList.get(0));
 
     }
 
-    private void getProducts() {
+    private void getProducts(String subCatName) {
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         // Create a new user with a first and last name
         firestore.collection("products").
-                whereEqualTo("subCategory", "Mobile").
+                whereEqualTo("subCategory", subCatName).
                 get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -116,6 +117,7 @@ private Boolean isCartRefresh = false;
     private void setProducts(List<Products> productsList) {
         productListAdaptger = new ProductListAdaptger(productsList, this::onClick);
         rvProducts.setAdapter(productListAdaptger);
+        productListAdaptger.notifyDataSetChanged();
     }
 
     @Override
@@ -123,6 +125,7 @@ private Boolean isCartRefresh = false;
         Intent intent = new Intent(this, ProductDetailActivity.class);
         intent.putExtra("productDetail", product);
         startActivityForResult(intent,999);
+
     }
 
     @Override
@@ -153,5 +156,10 @@ private Boolean isCartRefresh = false;
         setResult(111,intent);
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    public void onSubCatSelected(String subCatName) {
+        getProducts(subCatName);
     }
 }

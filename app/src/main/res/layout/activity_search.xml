@@ -6,4 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".ui.search.SearchActivity">
 
+    <SearchView
+        android:id="@+id/searchPro"
+        android:layout_width="300dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/search_background"
+        android:iconifiedByDefault="false"
+        android:queryHint="Search product"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:theme="@style/AppSearchView" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSearch"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchPro"
+        tools:layout_editor_absoluteX="25dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
