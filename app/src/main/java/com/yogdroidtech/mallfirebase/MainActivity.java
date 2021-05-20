@@ -4,9 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.widget.NestedScrollView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -19,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +37,6 @@ import com.yogdroidtech.mallfirebase.ui.ProfileFragment;
 import com.yogdroidtech.mallfirebase.ui.cart.CartActivity;
 import com.yogdroidtech.mallfirebase.ui.home.HomeFragment;
 import com.yogdroidtech.mallfirebase.ui.offer.OfferFragment;
-import com.yogdroidtech.mallfirebase.ui.search.SearchActivity;
 import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistFragment;
 
 import java.util.ArrayList;
@@ -146,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                         active = fragment1;
                         return true;
 
-                    case R.id.wishlist:
+                    case R.id.wishList:
                         fm.beginTransaction().hide(active).show(fragment2).commit();
                         active = fragment2;
                         return true;

@@ -6,7 +6,7 @@
         android:icon="@drawable/home"
         android:title="Home" />
     <item
-        android:id="@+id/wishlist"
+        android:id="@+id/wishList"
         android:icon="@drawable/wish_list"
         android:title="Wish List" />
     <item
