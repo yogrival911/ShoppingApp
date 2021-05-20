@@ -36,8 +36,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.yogdroidtech.mallfirebase.model.Products;
+import com.yogdroidtech.mallfirebase.ui.ProfileFragment;
 import com.yogdroidtech.mallfirebase.ui.cart.CartActivity;
 import com.yogdroidtech.mallfirebase.ui.home.HomeFragment;
+import com.yogdroidtech.mallfirebase.ui.offer.OfferFragment;
 import com.yogdroidtech.mallfirebase.ui.search.SearchActivity;
 import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistFragment;
 
@@ -51,7 +53,8 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
     Fragment fragment1 = new HomeFragment();
     Fragment fragment2 = new WishlistFragment();
-    Fragment fragment3 = new WishlistFragment();
+    Fragment fragment3 = new OfferFragment();
+    Fragment fragment4 = new ProfileFragment();
     FragmentManager fm = getSupportFragmentManager();
     private static int RC_SIGN_IN= 123;
     private Boolean isRefresh = false;          //wishlist refresh
@@ -147,13 +150,14 @@ public class MainActivity extends AppCompatActivity {
                         fm.beginTransaction().hide(active).show(fragment2).commit();
                         active = fragment2;
                         return true;
-                    case R.id.search:
-                        startActivity(new Intent(MainActivity.this, SearchActivity.class));
+                    case R.id.offer:
+                        fm.beginTransaction().hide(active).show(fragment3).commit();
+                        active = fragment3;
                         return true;
 
                     case R.id.profile:
-                        fm.beginTransaction().hide(active).show(fragment3).commit();
-                        active = fragment3;
+                        fm.beginTransaction().hide(active).show(fragment4).commit();
+                        active = fragment4;
                         return true;
                 }
                 return false;
@@ -162,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpFragments() {
+        fm.beginTransaction().add(R.id.frame_container, fragment4, "4").hide(fragment4).commit();
         fm.beginTransaction().add(R.id.frame_container, fragment3, "3").hide(fragment3).commit();
         fm.beginTransaction().add(R.id.frame_container, fragment2, "2").hide(fragment2).commit();
         fm.beginTransaction().add(R.id.frame_container,fragment1, "1").commit();

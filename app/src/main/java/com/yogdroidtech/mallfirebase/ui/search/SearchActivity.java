@@ -8,9 +8,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -57,10 +60,18 @@ RecyclerView rvSearch;
                 List<Products> emptyList = new ArrayList<>();
                 productListAdaptger = new ProductListAdaptger(emptyList, SearchActivity.this::onClick);
                 rvSearch.setAdapter(productListAdaptger);
-                searchView.requestFocus();
+
             }
         });
-
+        searchView.requestFocus();
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    showInputMethod(view.findFocus());
+                }
+            }
+        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -132,6 +143,12 @@ RecyclerView rvSearch;
         setResult(111,intent);
         super.onBackPressed();
         finish();
+    }
+    private void showInputMethod(View view) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.showSoftInput(view, 0);
+        }
     }
 
 }
