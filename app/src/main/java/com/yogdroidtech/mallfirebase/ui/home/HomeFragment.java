@@ -29,6 +29,7 @@ import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 import com.yogdroidtech.mallfirebase.CategorySelectListner;
 import com.yogdroidtech.mallfirebase.CircleProgressBarCustom;
+import com.yogdroidtech.mallfirebase.MainActViewModel;
 import com.yogdroidtech.mallfirebase.ProductSelectListener;
 import com.yogdroidtech.mallfirebase.adapters.BannerSliderAdapter;
 import com.yogdroidtech.mallfirebase.R;
@@ -41,20 +42,20 @@ import com.yogdroidtech.mallfirebase.model.Products;
 import com.yogdroidtech.mallfirebase.ui.productdetatail.ProductDetailActivity;
 import com.yogdroidtech.mallfirebase.ui.productlist.ProductListActivity;
 import com.yogdroidtech.mallfirebase.ui.search.SearchActivity;
+import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistViewModel;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
 
 public class HomeFragment extends Fragment implements ProductSelectListener , CategorySelectListner {
-    private String imgUrl = "https://img.freepik.com/free-psd/digital-marketing-facebook-banner-template_237398-233.jpg?size=626&ext=jpg";
-    private String imgUrl2 = "https://img.freepik.com/free-psd/digital-marketing-social-network-cover-web-banner-template_237398-271.jpg?size=626&ext=jpg";
-    private String imgUrl3 = "https://img.freepik.com/free-psd/digital-marketing-facebook-banner-template_237398-233.jpg?size=626&ext=jpg";
     private List<Banner> bannerList;
-    private List<Products> productsList;
+    private List<Products> wishListProducts;
     private BannerSliderAdapter bannerSliderAdapter;
     private SliderView sliderView;
+    private WishlistViewModel wishlistViewModel;
     private Button upload;
     private RecyclerView rvNewArrival,rvCategory;
     private HomeViewModel homeViewModel;
@@ -68,6 +69,8 @@ public class HomeFragment extends Fragment implements ProductSelectListener , Ca
     private CircleProgressBarCustom progressBarCustom;
     private NestedScrollView scrollView;
     private ConstraintLayout searchLayout;
+    private List<Products> cartProducts;
+    private MainActViewModel mainActViewModel;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -76,8 +79,25 @@ public class HomeFragment extends Fragment implements ProductSelectListener , Ca
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        mainActViewModel = new ViewModelProvider(requireActivity()).get(MainActViewModel.class);
+        mainActViewModel.setRefresh(false);
+        mainActViewModel.getCartProducts().observe(requireActivity(), new Observer<List<Products>>() {
+            @Override
+            public void onChanged(List<Products> products) {
+                cartProducts = products;
+                Log.i("c", cartProducts.toString());
+            }
+        });
+        homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        wishlistViewModel = new ViewModelProvider(getActivity()).get(WishlistViewModel.class);
+        wishlistViewModel.setRefresh(false);
+        wishlistViewModel.getProducts().observe(getViewLifecycleOwner(), new Observer<List<Products>>() {
+            @Override
+            public void onChanged(List<Products> products) {
+                wishListProducts = products;
+                Log.i("y", wishListProducts.toString());
+            }
+        });
 
         sliderView = view.findViewById(R.id.slider);
         rvNewArrival = view.findViewById(R.id.rvNewArrival);
@@ -118,7 +138,7 @@ public class HomeFragment extends Fragment implements ProductSelectListener , Ca
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        homeViewModel.getBanners().observe(getActivity(), new Observer<List<Banner>>() {
+        homeViewModel.getBanners().observe(getViewLifecycleOwner(), new Observer<List<Banner>>() {
             @Override
             public void onChanged(List<Banner> banners) {
 
@@ -179,6 +199,18 @@ public class HomeFragment extends Fragment implements ProductSelectListener , Ca
     @Override
     public void onClick(Products product) {
         Intent intent = new Intent(getActivity(), ProductDetailActivity.class);
+//        intent.putExtra("cart_products", (Serializable) cartProducts);
+//        intent.putExtra("wish_list",(Serializable)wishListProducts);
+        for(int i=0;i<wishListProducts.size();i++){
+            if(wishListProducts.get(i).getId().equals(product.getId())){
+                product.setWishList(true);
+            }
+        }
+        for(int j=0;j<cartProducts.size();j++){
+            if(cartProducts.get(j).getId().equals(product.getId())){
+                product.setQuantity(cartProducts.get(j).getQuantity());
+            }
+        }
         intent.putExtra("productDetail", product);
         getActivity().startActivityForResult(intent,9);
     }

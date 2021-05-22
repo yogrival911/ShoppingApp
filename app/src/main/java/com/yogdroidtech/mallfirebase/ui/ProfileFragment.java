@@ -44,7 +44,6 @@ private BottomNavigationView bottomNavigationView;
         cart.setOnClickListener(this::onClick);
         wishlist.setOnClickListener(this::onClick);
 
-
         userName.setText(FirebaseAuth.getInstance().getCurrentUser().getDisplayName()+"");
         return view;
     }

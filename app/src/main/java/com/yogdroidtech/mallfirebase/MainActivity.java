@@ -9,6 +9,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,8 +38,10 @@ import com.yogdroidtech.mallfirebase.model.Products;
 import com.yogdroidtech.mallfirebase.ui.ProfileFragment;
 import com.yogdroidtech.mallfirebase.ui.cart.CartActivity;
 import com.yogdroidtech.mallfirebase.ui.home.HomeFragment;
+import com.yogdroidtech.mallfirebase.ui.home.HomeViewModel;
 import com.yogdroidtech.mallfirebase.ui.offer.OfferFragment;
 import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistFragment;
+import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,12 +56,16 @@ public class MainActivity extends AppCompatActivity {
     Fragment fragment3 = new OfferFragment();
     Fragment fragment4 = new ProfileFragment();
     FragmentManager fm = getSupportFragmentManager();
+    private WishlistViewModel wishlistViewModel;
+    private MainActViewModel mainActViewModel;
     private static int RC_SIGN_IN= 123;
     private Boolean isRefresh = false;          //wishlist refresh
     private Boolean isCartRefresh = false;      //cart refresh
     Fragment active = fragment1;
     private TextView textCartItemCount;
     private int mCartItemCount;
+    private List<Products> cartListProducts;
+    private List<Products> wishListProducts;
 
     @BindView(R.id.bottomNavigationView)
     BottomNavigationView bottomNavigationView;
@@ -76,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+        mainActViewModel = new ViewModelProvider(this).get(MainActViewModel.class);
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("isRefresh", false);
+        fragment2.setArguments(bundle);
 
 //        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
@@ -126,10 +138,8 @@ public class MainActivity extends AppCompatActivity {
                    RC_SIGN_IN);
        }
        else{
-           if (savedInstanceState == null) {
-               setUpFragments();
-               loadCartProducts();
-           }
+           setUpFragments();
+           loadCartProducts();
 
        }
 
@@ -200,14 +210,21 @@ public class MainActivity extends AppCompatActivity {
                     //final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                     Fragment frg = getSupportFragmentManager().findFragmentByTag("2");
                     FragmentTransaction ft = fm.beginTransaction();
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("isRefresh", true);
+                    frg.setArguments(bundle);
                     ft.detach(frg);
                     ft.attach(frg);
                     ft.commit();
                 }
                 if(isCartRefresh){
                     loadCartProducts();
+                    Fragment frg = getSupportFragmentManager().findFragmentByTag("1");
+                    FragmentTransaction ft = fm.beginTransaction();
+                    ft.detach(frg);
+                    ft.attach(frg);
+                    ft.commit();
                 }
-
             }
             else{
                 Log.i("k", data.getData().toString());
@@ -256,46 +273,58 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     private void loadCartProducts() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        // Create a new user with a first and last name
-        db.collection("users")
-                .document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("cart").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            List<Products> products = new ArrayList<>();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d("TAG", document.getId() + " => " + document.get("imgUrl"));
-                                List<String> imgUrlList =(List<String>) document.get("imgUrl");
-                                String productName = (String)document.get("productName");
-                                String category = (String)document.get("category");
-                                String subCategory = (String) document.get("subCategory");
-                                String unit =(String) document.get("unit");
-                                Boolean isWishList = (Boolean)document.get("isWishList");
-                                String id = (String)document.get("id");
 
-                                Long quantity = (Long)document.get("quantity");
-                                int quantInt = quantity.intValue();
+        mainActViewModel.setRefresh(true);
+        mainActViewModel.getCartProducts().observe(this, new Observer<List<Products>>() {
+            @Override
+            public void onChanged(List<Products> products) {
+                cartListProducts = products;
+                mCartItemCount = products.size();
+                setupBadge();
+            }
+        });
 
-                                Long maxPrice = (Long)document.get("markPrice");
-                                int maxPriceInt = maxPrice.intValue();
-
-                                Long sellPrice = (Long)document.get("sellPrice");
-                                int sellPriceInt = sellPrice.intValue();
-
-                                Products product = new Products(productName,category,subCategory,id,maxPriceInt,sellPriceInt,isWishList,unit,quantInt);
-                                products.add(product);
-                            }
-                            mCartItemCount = products.size();
-                            setupBadge();
-
-                        } else {
-                            Log.d("TAG", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        // Create a new user with a first and last name
+//        db.collection("users")
+//                .document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("cart").get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            List<Products> products = new ArrayList<>();
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Log.d("TAG", document.getId() + " => " + document.get("imgUrl"));
+//                                List<String> imgUrlList =(List<String>) document.get("imgUrl");
+//                                String productName = (String)document.get("productName");
+//                                String category = (String)document.get("category");
+//                                String subCategory = (String) document.get("subCategory");
+//                                String unit =(String) document.get("unit");
+//                                Boolean isWishList = (Boolean)document.get("isWishList");
+//                                String id = (String)document.get("id");
+//
+//                                Long quantity = (Long)document.get("quantity");
+//                                int quantInt = quantity.intValue();
+//
+//                                Long maxPrice = (Long)document.get("markPrice");
+//                                int maxPriceInt = maxPrice.intValue();
+//
+//                                Long sellPrice = (Long)document.get("sellPrice");
+//                                int sellPriceInt = sellPrice.intValue();
+//
+//                                Products product = new Products(productName,category,subCategory,id,maxPriceInt,sellPriceInt,isWishList,unit,quantInt);
+//                                products.add(product);
+//                            }
+//                            mCartItemCount = products.size();
+//                            setupBadge();
+//
+//                        } else {
+//                            Log.d("TAG", "Error getting documents: ", task.getException());
+//                        }
+//                    }
+//                });
     }
 
 }

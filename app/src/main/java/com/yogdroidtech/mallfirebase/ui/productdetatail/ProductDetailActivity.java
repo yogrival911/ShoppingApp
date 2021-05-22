@@ -2,6 +2,7 @@ package com.yogdroidtech.mallfirebase.ui.productdetatail;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Fragment;
@@ -26,6 +27,8 @@ import com.yogdroidtech.mallfirebase.adapters.ProductSliderAdapter;
 import com.yogdroidtech.mallfirebase.model.Products;
 import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistViewModel;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -36,7 +39,8 @@ private FirebaseAuth firebaseAuth;
 private WishlistViewModel wishlistViewModel;
 private Boolean isRefresh = false; // wishlist refresh flag
 private Boolean isCartRefresh = false; //cartRefresh flag
-@BindView(R.id.slider)
+    private List<Products> wishListProducts;
+    @BindView(R.id.slider)
 SliderView sliderView;
 @BindView(R.id.button3)
 Button addToCart;
@@ -49,10 +53,11 @@ ImageView addToWish;
 
         ButterKnife.bind(this);
 
-        wishlistViewModel = wishlistViewModel = new ViewModelProvider(this).get(WishlistViewModel.class);
-
         productDetail = (Products) getIntent().getSerializableExtra("productDetail");
         Log.i("yog", productDetail.toString());
+        if (productDetail.getQuantity()!=0){
+            addToCart.setText("Added"+productDetail.getQuantity());
+        }
          firebaseAuth = FirebaseAuth.getInstance();
 
         addToCart.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +100,7 @@ ImageView addToWish;
 
 
     private void addToCartCall() {
-        productDetail.setQuantity(2);
+        productDetail.setQuantity(productDetail.getQuantity()+1);
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("cart").document(String.valueOf(productDetail.getId())).set(productDetail).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

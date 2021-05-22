@@ -1,4 +1,4 @@
-package com.yogdroidtech.mallfirebase.ui.wishlist;
+package com.yogdroidtech.mallfirebase;
 
 import android.util.Log;
 
@@ -13,38 +13,31 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.yogdroidtech.mallfirebase.model.Banner;
 import com.yogdroidtech.mallfirebase.model.Products;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class WishlistViewModel extends ViewModel {
-    private MutableLiveData<List<Products>> productList;
+public class MainActViewModel extends ViewModel {
+    private MutableLiveData<List<Products>> cartProductList;
     private Boolean isRefresh = false;
-    public LiveData<List<Products>> getProducts() {
-        if (productList == null || isRefresh) { //// uncomment to retain data. It was preventing refresh of fragment with new data
-            productList = new MutableLiveData<List<Products>>();
-            loadProducts();
+    public MutableLiveData<List<Products>> getCartProducts() {
+        if (cartProductList == null || isRefresh) {
+            cartProductList = new MutableLiveData<List<Products>>();
+            loadCartProducts();
         }
-        return productList;
+        return cartProductList;
     }
 
     public void setRefresh(Boolean refresh) {
         isRefresh = refresh;
     }
 
-    public LiveData<List<Products>> getRefreshWishList(){
-        productList = new MutableLiveData<List<Products>>();
-        loadProducts();
-        return  productList;
-    }
-
-    private void loadProducts() {
+    private void loadCartProducts() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         // Create a new user with a first and last name
         db.collection("users")
-                .document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("wishlist").get()
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid()).collection("cart").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -60,6 +53,8 @@ public class WishlistViewModel extends ViewModel {
                                 Boolean isWishList = (Boolean)document.get("isWishList");
                                 String id = (String)document.get("id");
 
+                                Long quantity = (Long)document.get("quantity");
+                                int quantInt = quantity.intValue();
 
                                 Long maxPrice = (Long)document.get("markPrice");
                                 int maxPriceInt = maxPrice.intValue();
@@ -67,17 +62,17 @@ public class WishlistViewModel extends ViewModel {
                                 Long sellPrice = (Long)document.get("sellPrice");
                                 int sellPriceInt = sellPrice.intValue();
 
-                                Products product = new Products(productName,category,subCategory,id,maxPriceInt,sellPriceInt,isWishList,unit);
-                                product.setImgUrl(imgUrlList);
+                                Products product = new Products(productName,category,subCategory,id,maxPriceInt,sellPriceInt,isWishList,unit,quantInt);
                                 products.add(product);
                             }
-                            productList.setValue(products);
-
-                        } else {
+                            cartProductList.setValue(products);
+                        }
+                        else {
                             Log.d("TAG", "Error getting documents: ", task.getException());
                         }
                     }
                 });
     }
+
 
 }

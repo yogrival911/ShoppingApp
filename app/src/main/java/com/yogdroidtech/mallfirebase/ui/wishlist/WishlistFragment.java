@@ -36,6 +36,7 @@ private ProductListAdaptger productListAdaptger;
 private GridLayoutManager gridLayoutManager;
 private RecyclerView recyclerView;
 private List<Products> productsList = new ArrayList<>();
+private Boolean isWishRefresh = false;
     public WishlistFragment() {
         // Required empty public constructor
     }
@@ -47,7 +48,15 @@ private List<Products> productsList = new ArrayList<>();
         gridLayoutManager = new GridLayoutManager(getContext(),2);
         recyclerView.setLayoutManager(gridLayoutManager);
 
-        wishlistViewModel = new ViewModelProvider(this).get(WishlistViewModel.class);
+        Bundle bundle = getArguments();
+        isWishRefresh = bundle.getBoolean("isRefresh", false);
+        wishlistViewModel = new ViewModelProvider(getActivity()).get(WishlistViewModel.class);
+        if(true){
+            wishlistViewModel.setRefresh(true);
+        }
+        else {
+            wishlistViewModel.setRefresh(false);
+        }
         wishlistViewModel.getProducts().observe(getActivity(), new Observer<List<Products>>() {
             @Override
             public void onChanged(List<Products> products) {
