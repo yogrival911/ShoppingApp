@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,10 +43,20 @@ private Boolean isCartRefresh = false; //cartRefresh flag
     private List<Products> wishListProducts;
     @BindView(R.id.slider)
 SliderView sliderView;
-@BindView(R.id.button3)
-Button addToCart;
+@BindView(R.id.textView17)
+TextView addToCart;
 @BindView(R.id.imageView6)
 ImageView addToWish;
+@BindView(R.id.name)
+TextView name;
+@BindView(R.id.textView11)
+TextView sellPrice;
+@BindView(R.id.textView13)
+TextView mrp;
+@BindView(R.id.textView14)
+TextView discount;
+@BindView(R.id.textView16)
+TextView description;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +66,7 @@ ImageView addToWish;
 
         productDetail = (Products) getIntent().getSerializableExtra("productDetail");
         Log.i("yog", productDetail.toString());
+        setView();
         if (productDetail.getQuantity()!=0){
             addToCart.setText("Added"+productDetail.getQuantity());
         }
@@ -80,6 +92,15 @@ ImageView addToWish;
         sliderView.startAutoCycle();
     }
 
+    private void setView() {
+        int disc = productDetail.getMarkPrice() - productDetail.getSellPrice();
+        name.setText(productDetail.getProductName());
+        sellPrice.setText("\u20B9"+productDetail.getSellPrice());
+        mrp.setText("\u20B9"+productDetail.getMarkPrice());
+        discount.setText(disc+"%");
+
+    }
+
     private void addToWishCall() {
         productDetail.setWishList(true);
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -100,12 +121,14 @@ ImageView addToWish;
 
 
     private void addToCartCall() {
-        productDetail.setQuantity(productDetail.getQuantity()+1);
+        int updatedCartQuant = productDetail.getQuantity()+1;
+        productDetail.setQuantity(updatedCartQuant);
         FirebaseFirestore firestore = FirebaseFirestore.getInstance();
         firestore.collection("users").document(firebaseAuth.getCurrentUser().getUid()).collection("cart").document(String.valueOf(productDetail.getId())).set(productDetail).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Log.i("gg", "g");
+//                addToCart.setText(updatedCartQuant+"");
                 isCartRefresh = true;
 
             }

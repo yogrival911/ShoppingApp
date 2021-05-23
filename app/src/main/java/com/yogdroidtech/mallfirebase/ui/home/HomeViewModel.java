@@ -98,7 +98,6 @@ public class HomeViewModel extends ViewModel {
                                 Boolean isWishList = (Boolean)document.get("isWishList");
                                 String id =(String)document.get("id");
 
-
                                 Long maxPrice = (Long)document.get("markPrice");
                                 int maxPriceInt = maxPrice.intValue();
 

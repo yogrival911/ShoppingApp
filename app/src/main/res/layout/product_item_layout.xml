@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:background="@drawable/image_round_corner"
-                android:scaleType="centerCrop"
+                android:scaleType="fitCenter"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
