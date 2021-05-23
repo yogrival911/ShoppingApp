@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,10 @@ TextView mrp;
 TextView discount;
 @BindView(R.id.textView16)
 TextView description;
+@BindView(R.id.cartCount)
+TextView cartCount;
+@BindView(R.id.addCartLayout)
+LinearLayout addCartLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,11 +73,12 @@ TextView description;
         Log.i("yog", productDetail.toString());
         setView();
         if (productDetail.getQuantity()!=0){
-            addToCart.setText("Added"+productDetail.getQuantity());
+            cartCount.setText(""+productDetail.getQuantity());
+            addToCart.setText("Added");
         }
          firebaseAuth = FirebaseAuth.getInstance();
 
-        addToCart.setOnClickListener(new View.OnClickListener() {
+        addCartLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addToCartCall();
@@ -128,7 +134,8 @@ TextView description;
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Log.i("gg", "g");
-//                addToCart.setText(updatedCartQuant+"");
+                cartCount.setText(updatedCartQuant+"");
+                addToCart.setText("Added");
                 isCartRefresh = true;
 
             }

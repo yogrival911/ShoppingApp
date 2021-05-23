@@ -88,6 +88,7 @@ public class HomeFragment extends Fragment implements ProductSelectListener , Ca
                 Log.i("c", cartProducts.toString());
             }
         });
+//        cartProducts =(List<Products>) getArguments().getSerializable("cartList");
         homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         wishlistViewModel = new ViewModelProvider(getActivity()).get(WishlistViewModel.class);
         wishlistViewModel.setRefresh(false);

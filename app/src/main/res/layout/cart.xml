@@ -20,7 +20,7 @@
         tools:srcCompat="@drawable/ic_baseline_shopping_basket_24" />
 
     <TextView
-        android:id="@+id/cart_badge"
+        android:id="@+id/cartCount"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_gravity="right|end|top"

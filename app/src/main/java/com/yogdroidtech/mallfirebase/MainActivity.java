@@ -30,20 +30,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.yogdroidtech.mallfirebase.model.Products;
 import com.yogdroidtech.mallfirebase.ui.ProfileFragment;
 import com.yogdroidtech.mallfirebase.ui.cart.CartActivity;
 import com.yogdroidtech.mallfirebase.ui.home.HomeFragment;
-import com.yogdroidtech.mallfirebase.ui.home.HomeViewModel;
 import com.yogdroidtech.mallfirebase.ui.offer.OfferFragment;
 import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistFragment;
 import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistViewModel;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -219,11 +215,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if(isCartRefresh){
                     loadCartProducts();
-                    Fragment frg = getSupportFragmentManager().findFragmentByTag("1");
-                    FragmentTransaction ft = fm.beginTransaction();
-                    ft.detach(frg);
-                    ft.attach(frg);
-                    ft.commit();
+
                 }
             }
             else{
@@ -237,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.top_right_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.action_cart);
         View actionView = menuItem.getActionView();
-        textCartItemCount = (TextView) actionView.findViewById(R.id.cart_badge);
+        textCartItemCount = (TextView) actionView.findViewById(R.id.cartCount);
         actionView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -282,6 +274,11 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(List<Products> products) {
                 cartListProducts = products;
                 mCartItemCount = products.size();
+                Fragment frg = getSupportFragmentManager().findFragmentByTag("1");
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.detach(frg);
+                ft.attach(frg);
+                ft.commit();
                 setupBadge();
             }
         });
