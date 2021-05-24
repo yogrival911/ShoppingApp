@@ -2,6 +2,7 @@ package com.yogdroidtech.mallfirebase.ui.cart;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,6 +47,10 @@ TextView tvTotal;
 TextView actionTitle;
 @BindView(R.id.imageView15)
 ImageView backButton;
+@BindView(R.id.emptyCart)
+ConstraintLayout emptyCart;
+    @BindView(R.id.constraintLayout3)
+    ConstraintLayout mainContent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +66,10 @@ ImageView backButton;
             @Override
             public void onChanged(List<Products> products) {
                 productsList = products;
+                if(products.size()==0){
+                    emptyCart.setVisibility(View.VISIBLE);
+                    mainContent.setVisibility(View.GONE);
+                }
                 cartAdapter = new CartAdapter(products, CartActivity.this::onCartRemove);
                 rvCart.setAdapter(cartAdapter);
                 for(int i=0; i<products.size();i++){
@@ -91,6 +100,10 @@ ImageView backButton;
                 isCartRefresh = true;
                 productsList.remove(position);
                 cartAdapter.notifyDataSetChanged();
+                if(productsList.size()==0){
+                    emptyCart.setVisibility(View.VISIBLE);
+                    mainContent.setVisibility(View.GONE);
+                }
                 int quantity = product.getQuantity();
                 int sellPrice = product.getSellPrice();
                 int amountReduced = quantity*sellPrice;

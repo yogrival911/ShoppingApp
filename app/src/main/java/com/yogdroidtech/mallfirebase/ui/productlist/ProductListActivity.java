@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -48,7 +51,10 @@ private Boolean isCartRefresh = false;
     RecyclerView rvSubCat;
     @BindView(R.id.rvProducts)
     RecyclerView rvProducts;
-
+    @BindView(R.id.actionTitle)
+    TextView actionTitle;
+    @BindView(R.id.imageView15)
+    ImageView backButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +75,13 @@ private Boolean isCartRefresh = false;
         rvProducts.setLayoutManager(gridLayoutManager);
 
        getProducts(subCatList.get(0));
+       actionTitle.setText(category.getCategoryName());
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
     }
 
