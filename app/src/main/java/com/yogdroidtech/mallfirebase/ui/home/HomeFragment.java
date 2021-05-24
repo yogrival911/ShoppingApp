@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment implements ProductSelectListener , Ca
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        mainActViewModel = new ViewModelProvider(requireActivity()).get(MainActViewModel.class);
+        mainActViewModel = new ViewModelProvider(getActivity()).get(MainActViewModel.class);
         mainActViewModel.setRefresh(false);
         mainActViewModel.getCartProducts().observe(requireActivity(), new Observer<List<Products>>() {
             @Override

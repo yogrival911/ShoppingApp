@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.yogdroidtech.mallfirebase.CartRemoveListner;
 import com.yogdroidtech.mallfirebase.R;
 import com.yogdroidtech.mallfirebase.model.Products;
@@ -35,6 +36,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         holder.tvQuanity.setText(productsList.get(position).getQuantity()+"");
         holder.sellPrice.setText(productsList.get(position).getSellPrice()+"");
+        Glide.with(holder.itemView.getContext()).load(productsList.get(position).getImgUrl().get(0)).into(holder.proImage);
         holder.removeCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,12 +52,13 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
     public class CartViewHolder extends RecyclerView.ViewHolder {
         TextView tvQuanity,sellPrice;
-        ImageView removeCart;
+        ImageView removeCart,proImage;
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
             tvQuanity = itemView.findViewById(R.id.tvQuanity);
             sellPrice = itemView.findViewById(R.id.sellPrice);
             removeCart = itemView.findViewById(R.id.removeCart);
+            proImage = itemView.findViewById(R.id.proImage);
         }
     }
 }

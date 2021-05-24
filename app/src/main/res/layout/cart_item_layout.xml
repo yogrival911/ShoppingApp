@@ -28,9 +28,10 @@
             android:id="@+id/proImage"
             android:layout_width="120dp"
             android:layout_height="120dp"
+            android:layout_margin="4dp"
             cardView:layout_constraintBottom_toBottomOf="parent"
-            cardView:layout_constraintStart_toStartOf="parent"
 
+            cardView:layout_constraintStart_toStartOf="parent"
             cardView:layout_constraintTop_toTopOf="parent"
             cardView:srcCompat="@drawable/ic_launcher_foreground"
             tools:background="@drawable/ic_launcher_foreground" />

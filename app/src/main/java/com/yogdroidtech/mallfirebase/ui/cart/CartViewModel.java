@@ -57,6 +57,7 @@ public class CartViewModel extends ViewModel {
                                 int sellPriceInt = sellPrice.intValue();
 
                                 Products product = new Products(productName,category,subCategory,id,maxPriceInt,sellPriceInt,isWishList,unit,quantInt);
+                                product.setImgUrl(imgUrlList);
                                 products.add(product);
                             }
                             productList.setValue(products);

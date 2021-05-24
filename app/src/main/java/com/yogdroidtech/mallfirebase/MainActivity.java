@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     private int mCartItemCount;
     private List<Products> cartListProducts;
     private List<Products> wishListProducts;
-
     @BindView(R.id.bottomNavigationView)
     BottomNavigationView bottomNavigationView;
     @BindView(R.id.frame_container)
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(null);
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
@@ -134,10 +133,13 @@ public class MainActivity extends AppCompatActivity {
                    RC_SIGN_IN);
        }
        else{
+//       if(savedInstanceState == null){
            setUpFragments();
            loadCartProducts();
+//       }
 
        }
+       bottomNavigationView.setSelectedItemId(R.id.home);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override

@@ -1,10 +1,12 @@
 package com.yogdroidtech.mallfirebase.adapters;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,9 +46,11 @@ public class ProductListAdaptger extends RecyclerView.Adapter<ProductListAdaptge
 
     @Override
     public void onBindViewHolder(@NonNull ProductsViewHolder holder, int position) {
-
+        holder.mrp.setPaintFlags( Paint.STRIKE_THRU_TEXT_FLAG);
         Glide.with(holder.itemView.getContext()).load(productsList.get(position).getImgUrl().get(0)).into(holder.ivProduct);
-
+        holder.sellPrice.setText("\u20B9"+productsList.get(position).getSellPrice());
+        holder.mrp.setText("\u20B9"+productsList.get(position).getMarkPrice());
+        holder.name.setText(productsList.get(position).getProductName());
         if(isDelete) {
             holder.delete.setVisibility(View.VISIBLE);
             holder.delete.setOnClickListener(new View.OnClickListener() {
@@ -80,10 +84,14 @@ public class ProductListAdaptger extends RecyclerView.Adapter<ProductListAdaptge
 
     public class ProductsViewHolder extends RecyclerView.ViewHolder {
         ImageView ivProduct, delete;
+        TextView name,sellPrice, mrp;
         public ProductsViewHolder(@NonNull View itemView) {
             super(itemView);
             ivProduct = itemView.findViewById(R.id.imageView4);
             delete = itemView.findViewById(R.id.imageView7);
+            name = itemView.findViewById(R.id.textView4);
+            sellPrice = itemView.findViewById(R.id.textView7);
+            mrp = itemView.findViewById(R.id.textView19);
         }
     }
     public void filterList(List<Products> products) {
