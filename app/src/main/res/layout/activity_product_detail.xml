@@ -6,6 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".ui.productdetatail.ProductDetailActivity">
 
+    <include
+        android:id="@+id/include2"
+        layout="@layout/common_header" />
+
     <LinearLayout
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
@@ -65,8 +69,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/include2">
 
         <LinearLayout
             android:layout_width="match_parent"

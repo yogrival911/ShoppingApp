@@ -94,7 +94,7 @@ RecyclerView rvSearch;
         // running a for loop to compare elements.
         for (Products item : productsList ) {
             // checking if the entered string matched with any item of our recycler view.
-            if (item.getProductName().contains(text)) {
+            if (item.getProductName().toLowerCase().contains(text.toLowerCase())) {
                 // if the item is matched we are
                 // adding it to our filtered list.
                 filteredlist.add(item);

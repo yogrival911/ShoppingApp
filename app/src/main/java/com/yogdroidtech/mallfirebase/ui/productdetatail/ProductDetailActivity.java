@@ -62,6 +62,11 @@ TextView description;
 TextView cartCount;
 @BindView(R.id.addCartLayout)
 LinearLayout addCartLayout;
+@BindView(R.id.actionTitle)
+TextView actionTitle;
+@BindView(R.id.imageView15)
+ImageView backButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +74,13 @@ LinearLayout addCartLayout;
 
         ButterKnife.bind(this);
 
+        actionTitle.setText("Product Detail");
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
         productDetail = (Products) getIntent().getSerializableExtra("productDetail");
         Log.i("yog", productDetail.toString());
         setView();

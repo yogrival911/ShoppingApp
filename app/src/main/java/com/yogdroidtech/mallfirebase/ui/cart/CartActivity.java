@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,12 +42,18 @@ private int grandTotal = 0;
 RecyclerView rvCart;
 @BindView(R.id.textView3)
 TextView tvTotal;
+@BindView(R.id.actionTitle)
+TextView actionTitle;
+@BindView(R.id.imageView15)
+ImageView backButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
 
         ButterKnife.bind(this);
+
+
         linearLayoutManager = new LinearLayoutManager(this);
         rvCart.setLayoutManager(linearLayoutManager);
         cartViewModel = new ViewModelProvider(this).get(CartViewModel.class);
@@ -61,6 +69,13 @@ TextView tvTotal;
                     grandTotal = grandTotal + quantity * sellPrice;
                 }
                 tvTotal.setText(""+ grandTotal);
+            }
+        });
+        actionTitle.setText("Cart");
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
             }
         });
     }

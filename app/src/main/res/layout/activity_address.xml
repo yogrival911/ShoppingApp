@@ -6,4 +6,5 @@
     android:layout_height="match_parent"
     tools:context=".ui.address.AddressActivity">
 
+    <include layout="@layout/common_header" />
 </androidx.constraintlayout.widget.ConstraintLayout>

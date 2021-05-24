@@ -11,8 +11,8 @@
         android:title="Wish List" />
     <item
         android:id="@+id/offer"
-        android:icon="@drawable/ic_baseline_star_24"
-        android:title="Offer" />
+        android:icon="@drawable/ic_baseline_local_fire_department_24"
+        android:title="Offers" />
     <item
         android:id="@+id/profile"
         android:icon="@drawable/profile"
