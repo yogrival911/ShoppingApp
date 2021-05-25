@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ import com.yogdroidtech.mallfirebase.adapters.CartAdapter;
 import com.yogdroidtech.mallfirebase.model.Products;
 import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistViewModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,8 +51,10 @@ TextView actionTitle;
 ImageView backButton;
 @BindView(R.id.emptyCart)
 ConstraintLayout emptyCart;
-    @BindView(R.id.constraintLayout3)
-    ConstraintLayout mainContent;
+@BindView(R.id.button5)
+Button checkout;
+@BindView(R.id.constraintLayout3)
+ConstraintLayout mainContent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +82,14 @@ ConstraintLayout emptyCart;
                     grandTotal = grandTotal + quantity * sellPrice;
                 }
                 tvTotal.setText(""+ grandTotal);
+            }
+        });
+        checkout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CartActivity.this, CheckoutActivity.class);
+                intent.putExtra("cartList",(Serializable) productsList);
+                startActivity(intent);
             }
         });
         actionTitle.setText("Cart");
