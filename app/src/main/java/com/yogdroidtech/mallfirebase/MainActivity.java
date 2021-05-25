@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -25,17 +26,27 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.yogdroidtech.mallfirebase.model.Products;
 import com.yogdroidtech.mallfirebase.ui.ProfileFragment;
 import com.yogdroidtech.mallfirebase.ui.cart.CartActivity;
 import com.yogdroidtech.mallfirebase.ui.home.HomeFragment;
 import com.yogdroidtech.mallfirebase.ui.offer.OfferFragment;
+import com.yogdroidtech.mallfirebase.ui.productdetatail.ProductDetailActivity;
 import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistFragment;
 import com.yogdroidtech.mallfirebase.ui.wishlist.WishlistViewModel;
 
@@ -134,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
        }
        else{
 //       if(savedInstanceState == null){
+           getDynamicLink();
            setUpFragments();
            loadCartProducts();
 //       }
@@ -169,6 +181,104 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void getDynamicLink() {
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                        // Get deep link from result (may be null if no link is found)
+                        Uri deepLink = null;
+                        if (pendingDynamicLinkData != null) {
+                            deepLink = pendingDynamicLinkData.getLink();
+                            Log.i("yog", deepLink.toString());
+                            String link = deepLink.toString();
+                            if(link.contains("productID=")) {
+                                Log.i("string", link);
+                                String[] parts = link.split("productID=");
+
+                                String part1 = parts[0]; // 004
+                                String productID = parts[1];
+
+                                wishlistViewModel = new ViewModelProvider(MainActivity.this).get(WishlistViewModel.class);
+                                wishlistViewModel.setRefresh(false);
+                                wishlistViewModel.getProducts().observe(MainActivity.this, new Observer<List<Products>>() {
+                                    @Override
+                                    public void onChanged(List<Products> products) {
+                                        wishListProducts = products;
+                                        Log.i("y", wishListProducts.toString());
+                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                        db.collection("products")
+                                                .whereEqualTo("id", productID)
+                                                .get()
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                                Log.d("TAG", document.getId() + " => " + document.getData());
+                                                                List<String> imgUrlList =(List<String>) document.get("imgUrl");
+                                                                String productName = (String)document.get("productName");
+                                                                String category = (String)document.get("category");
+                                                                String subCategory = (String) document.get("subCategory");
+                                                                String unit =(String) document.get("unit");
+                                                                Boolean isWishList = (Boolean)document.get("isWishList");
+                                                                String id = (String)document.get("id");
+
+
+                                                                Long maxPrice = (Long)document.get("markPrice");
+                                                                int maxPriceInt = maxPrice.intValue();
+
+                                                                Long sellPrice = (Long)document.get("sellPrice");
+                                                                int sellPriceInt = sellPrice.intValue();
+
+                                                                Products product = new Products(productName,category,subCategory,id,maxPriceInt,sellPriceInt,isWishList,unit,0);
+                                                                product.setImgUrl(imgUrlList);
+
+                                                                wishlistViewModel = new ViewModelProvider(MainActivity.this).get(WishlistViewModel.class);
+                                                                wishlistViewModel.setRefresh(false);
+                                                                wishlistViewModel.getProducts().observe(MainActivity.this, new Observer<List<Products>>() {
+                                                                    @Override
+                                                                    public void onChanged(List<Products> products) {
+                                                                        wishListProducts = products;
+                                                                        Intent intent = new Intent(MainActivity.this, ProductDetailActivity.class);
+                                                                        for(int i=0;i<wishListProducts.size();i++){
+                                                                            if(wishListProducts.get(i).getId().equals(product.getId())){
+                                                                                product.setWishList(true);
+                                                                            }
+                                                                        }
+                                                                        for(int j=0;j<cartListProducts.size();j++){
+                                                                            if(cartListProducts.get(j).getId().equals(product.getId())){
+                                                                                product.setQuantity(cartListProducts.get(j).getQuantity());
+                                                                            }
+                                                                        }
+                                                                        intent.putExtra("productDetail", product);
+                                                                        startActivityForResult(intent,9);
+                                                                    }
+                                                                });
+                                                            }
+                                                        } else {
+                                                            Log.d("TAG", "Error getting documents: ", task.getException());
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                });
+
+                            }
+
+                        }
+
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("TAG", "getDynamicLink:onFailure", e);
+                    }
+                });
+    }
+
     private void setUpFragments() {
         fm.beginTransaction().add(R.id.frame_container, fragment4, "4").hide(fragment4).commit();
         fm.beginTransaction().add(R.id.frame_container, fragment3, "3").hide(fragment3).commit();
@@ -187,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Log.i("yogesh", user.getDisplayName());
                 setUpFragments();
-
+                getDynamicLink();
                 // ...
             } else {
                 Log.i("yogesh", "failed");
@@ -325,5 +435,6 @@ public class MainActivity extends AppCompatActivity {
 //                    }
 //                });
     }
+
 
 }
